@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import logo from '../../images/logo.svg';
+// import logo from '../../images/logo.svg';
+import { ReactComponent as Logo } from '../../images/logo.svg';
 import './Header.css';
 
 const Header = memo(({ openMenu }) => {
@@ -10,13 +11,13 @@ const Header = memo(({ openMenu }) => {
     return (
       <header className="header">
         <Link to="/" className="header__logo-link">
-          <img src={logo} alt="Изображение логотипа" className="header__logo-image" />
+          <Logo className="header__logo-image" />
         </Link>
         <section className="header__authorization-section">
-          <Link to="/signup" className="header__register-link">
+          <Link to="/signup" className="header__register-link link-hover">
             Регистрация
           </Link>
-          <Link to="/signin" className="header__login-link">
+          <Link to="/signin" className="header__login-link button-hover">
             Войти
           </Link>
         </section>
@@ -32,22 +33,22 @@ const Header = memo(({ openMenu }) => {
       <header className="header">
         <section className="header__links-section">
           <Link to="/" className="header__logo-link">
-            <img src={logo} alt="Изображение логотипа" className="header__logo-image" />
+            <Logo className="header__logo-image" />
           </Link>
           <div className="header__links">
-            <Link to="/movies" className="header__link header__link_font-type_medium">
+            <Link to="/movies" className="header__link header__link_font-type_medium link-hover">
               Фильмы
             </Link>
-            <Link to="/saved-movies" className="header__link">
+            <Link to="/saved-movies" className="header__link link-hover">
               Сохраненные фильмы
             </Link>
           </div>
         </section>
         <section className="header__profile-section">
-          <Link to="/profile" className="header__profile-link">
+          <Link to="/profile" className="header__profile-link link-hover">
             Аккаунт
           </Link>
-          <Link to="/profile" className="header__profile-button">
+          <Link to="/profile" className="header__profile-button button-hover">
             <div className="header__profile-icon"></div>
           </Link>
         </section>
