@@ -1,0 +1,139 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.875rem;
+  min-width: 18.25rem;
+  min-height: 4.625rem;
+}
+
+.header__links-section {
+  display: flex;
+  align-items: center;
+  gap: 2.75rem;
+}
+
+.header__links {
+  display: none;
+  gap: 1rem;
+}
+
+.header__logo-link {
+  width: 2.375rem;
+  height: 2.375rem;
+}
+
+.header__link {
+  text-decoration: none;
+  color: black;
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+}
+
+.header__link_font-type_medium {
+  font-weight: 500;
+}
+
+.header__logo-image {
+  width: 100%;
+  height: 100%;
+}
+
+.header__profile-section {
+  display: none;
+  align-items: center;
+  gap: 0.8125rem;
+}
+
+.header__profile-link {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1rem;
+}
+
+.header__profile-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.875rem;
+  height: 1.875rem;
+  border-radius: 0.375rem;
+  background-color: #f4f4f4;
+}
+
+.header__profile-icon {
+  background: url(../../images/profile.svg) no-repeat center / contain;
+  width: 0.625rem;
+  height: 0.625rem;
+}
+
+.header__authorization-section {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.header__register-link {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+  font-size: 0.625rem;
+  line-height: 1rem;
+}
+
+.header__login-link {
+  text-decoration: none;
+  text-align: center;
+  width: 3.375rem;
+  height: 1.625rem;
+  color: white;
+  font-weight: 500;
+  font-size: 0.625rem;
+  line-height: 1.625rem;
+  background-color: #3456f3;
+  border-radius: 0.1875rem;
+}
+
+.header__menu-button {
+  padding: 0;
+  background: url(../../images/menu.svg) no-repeat center / contain;
+  width: 2.5rem;
+  height: 2.6875rem;
+  border: none;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 768px) {
+  .header {
+    padding: 0 1.875rem;
+  }
+  .header__register-link {
+    font-size: 0.75rem;
+  }
+  .header__login-link {
+    width: 4.75rem;
+    height: 2rem;
+    font-size: 0.75rem;
+    line-height: 2rem;
+  }
+  .header__authorization-section {
+    gap: 1.875rem;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .header {
+    padding: 0 4.375rem;
+  }
+  .header__profile-section {
+    display: flex;
+  }
+  .header__menu-button {
+    display: none;
+  }
+  .header__links {
+    display: flex;
+  }
+}

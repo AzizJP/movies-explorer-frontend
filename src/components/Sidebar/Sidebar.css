@@ -1,0 +1,7 @@
+.sidebar {
+  display: none;
+}
+
+.sidebar_active {
+  display: flex;
+}
