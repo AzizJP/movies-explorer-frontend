@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-// import logo from '../../images/logo.svg';
 import { ReactComponent as Logo } from '../../images/logo.svg';
+import { ReactComponent as ProfileIcon } from '../../images/profile.svg';
 import './Header.css';
 
 const Header = memo(({ openMenu }) => {
@@ -49,7 +49,7 @@ const Header = memo(({ openMenu }) => {
             Аккаунт
           </Link>
           <Link to="/profile" className="header__profile-button button-hover">
-            <div className="header__profile-icon"></div>
+            <ProfileIcon className="header__profile-icon" />
           </Link>
         </section>
         <button type="button" className="header__menu-button" onClick={openMenu}></button>
