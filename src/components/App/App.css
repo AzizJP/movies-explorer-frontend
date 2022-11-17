@@ -9,6 +9,11 @@
   font-weight: 400;
 }
 
+:focus {
+  outline-color: #2be080;
+  box-shadow: 0 5px 30px #2be080;
+}
+
 @media screen and (min-width: 1280px) {
   .link-hover:before {
     content: '';
