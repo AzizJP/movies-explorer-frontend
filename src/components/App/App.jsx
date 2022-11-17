@@ -3,7 +3,7 @@ import { Switch } from 'react-router-dom';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
-import Sidebar from '../Sidebar/Sidebar';
+import Navigation from '../Navigation/Navigation';
 import './App.css';
 
 const App = memo(() => {
@@ -34,7 +34,7 @@ const App = memo(() => {
       <Header openMenu={handleMenuButtonClick} />
       <Main />
       <Switch></Switch>
-      <Sidebar isOpen={isOpenMenu} closeMenu={handleCloseMenuButtonClick} />
+      <Navigation isOpen={isOpenMenu} closeMenu={handleCloseMenuButtonClick} />
       <Footer />
     </div>
   );
