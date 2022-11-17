@@ -1,6 +1,8 @@
 import { memo, useCallback, useEffect, useState } from 'react';
 import { Switch } from 'react-router-dom';
+import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
+import Main from '../Main/Main';
 import Sidebar from '../Sidebar/Sidebar';
 import './App.css';
 
@@ -30,8 +32,10 @@ const App = memo(() => {
   return (
     <div className="page">
       <Header openMenu={handleMenuButtonClick} />
+      <Main />
       <Switch></Switch>
       <Sidebar isOpen={isOpenMenu} closeMenu={handleCloseMenuButtonClick} />
+      <Footer />
     </div>
   );
 });
