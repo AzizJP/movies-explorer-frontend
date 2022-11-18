@@ -1,8 +1,8 @@
 import { memo } from 'react';
 
-import './SearchForm.css';
+import './SearchFormInput.css';
 
-const SearchForm = memo(() => {
+const SearchFormInput = memo(() => {
   return (
     <div className="search__input-wrapper">
       <input type="text" className="search__input" placeholder="Фильм" />
@@ -11,4 +11,4 @@ const SearchForm = memo(() => {
   );
 });
 
-export default SearchForm;
+export default SearchFormInput;
