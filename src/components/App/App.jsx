@@ -50,7 +50,7 @@ const App = memo(() => {
           <SavedMovies />
         </Route>
         <Route path="/profile">
-          <Profile />
+          <Profile name={'Азиз'} email={'aziz@yandex.ru'} />
         </Route>
         <Route path="/signup">
           <Register />
