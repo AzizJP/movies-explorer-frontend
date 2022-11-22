@@ -2,9 +2,10 @@ import { memo } from 'react';
 
 import Promo from './Promo/Promo';
 import AboutProject from './AboutProject/AboutProject';
+import Techs from './Techs/Techs';
+import Portfolio from './Portfolio/Portfolio';
 
 import './Main.css';
-import Techs from './Techs/Techs';
 
 const Main = memo(() => {
   return (
@@ -12,6 +13,7 @@ const Main = memo(() => {
       <Promo />
       <AboutProject />
       <Techs />
+      <Portfolio />
     </main>
   );
 });
