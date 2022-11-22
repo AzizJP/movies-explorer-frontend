@@ -6,10 +6,12 @@ import './Promo.css';
 const Promo = memo(() => {
   return (
     <section className="promo__wrapper">
-      <h1 className="promo__title">
-        Учебный проект студента факультета Веб-разработки.
-      </h1>
-      <NavTab />
+      <div className="promo__background">
+        <h1 className="promo__title">
+          Учебный проект студента факультета Веб-разработки.
+        </h1>
+        <NavTab />
+      </div>
     </section>
   );
 });
