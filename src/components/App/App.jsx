@@ -50,7 +50,7 @@ const App = memo(() => {
           <SavedMovies />
         </Route>
         <Route path="/profile">
-          <Profile name={'Азиз'} email={'aziz@yandex.ru'} />
+          <Profile />
         </Route>
         <Route path="/signup">
           <Register />
@@ -62,7 +62,10 @@ const App = memo(() => {
           <NotFound />
         </Route>
       </Switch>
-      <Navigation isOpen={isOpenMenu} closeMenu={handleCloseMenuButtonClick} />
+      <Navigation
+        isOpen={isOpenMenu}
+        closeMenu={handleCloseMenuButtonClick}
+      />
       <Footer />
     </div>
   );

@@ -49,10 +49,12 @@
 }
 
 .profile__info_text {
-  margin: 0;
-  font-weight: 400;
+  text-align: end;
+  width: 75%;
   font-size: 0.6875rem;
   line-height: 0.8125rem;
+  border: none;
+  background-color: #fafafa;
 }
 
 .profile__edit-section {
