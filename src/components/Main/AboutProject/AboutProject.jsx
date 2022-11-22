@@ -5,7 +5,7 @@ import './AboutProject.css';
 const AboutProject = memo(() => {
   return (
     <section id="about-project" className="about-project__wrapper">
-      <h2 className="about-project__title">О проекте</h2>
+      <h2 className="title">О проекте</h2>
       <div className="about-project__text-group_wrapper">
         <div className="about-project__text-group">
           <h3 className="about-project__subtitle">

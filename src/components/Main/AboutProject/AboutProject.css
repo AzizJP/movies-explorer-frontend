@@ -4,7 +4,7 @@
   padding: 4.375rem 1.125rem;
 }
 
-.about-project__title {
+.title {
   position: relative;
   margin: 0 0 5.5625rem;
   width: 100%;
@@ -14,7 +14,7 @@
   letter-spacing: -0.04em;
 }
 
-.about-project__title:before {
+.title:before {
   position: absolute;
   bottom: -1.75rem;
   content: '';
@@ -84,12 +84,12 @@
   .about-project__wrapper {
     padding: 5.625rem 3.125rem;
   }
-  .about-project__title {
+  .title {
     margin-bottom: 5.875rem;
     font-size: 1.375rem;
     line-height: 1.6875rem;
   }
-  .about-project__title:before {
+  .title:before {
     bottom: -1.4375rem;
   }
   .about-project__text-group_wrapper {
