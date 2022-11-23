@@ -1,0 +1,39 @@
+.auth__header {
+  display: flex;
+  flex-direction: column;
+  padding: 3.5rem 0 5rem;
+  gap: 3.125rem;
+}
+
+.auth__logo-link {
+  align-self: center;
+  width: 2.375rem;
+  height: 2.375rem;
+}
+
+.auth__logo-image {
+  width: 100%;
+  height: 100%;
+}
+
+.auth__title {
+  margin: 0;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.8125rem;
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .auth__header {
+    padding: 0 0 2.5rem;
+    gap: 2.5rem;
+  }
+  .auth__logo-link {
+    align-self: flex-start;
+  }
+  .auth__title {
+    font-size: 1.5rem;
+    line-height: 1.8125rem;
+  }
+}

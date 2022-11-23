@@ -1,0 +1,24 @@
+.form__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  width: 81.25%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: 24.75rem;
+  width: 100%;
+  gap: 1.5rem;
+}
+
+@media screen and (min-width: 768px) {
+  .form__wrapper {
+    width: 100%;
+    min-height: 16.625rem;
+    margin: 0;
+    flex-grow: 0;
+  }
+}
