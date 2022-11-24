@@ -37,3 +37,10 @@
     line-height: 1.8125rem;
   }
 }
+
+@media screen and (min-width: 1280px) {
+  .auth__logo-image:hover path {
+    fill: #2be080;
+    transition: fill linear 0.2s;
+  }
+}

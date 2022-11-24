@@ -1,15 +1,28 @@
-import { memo } from 'react';
+import { memo, useCallback, useState } from 'react';
 import SearchForm from './SearchForm/SearchForm';
-import Preloader from './Preloader/Preloader';
 
 import './Movies.css';
+import MoviesCardList from './MoviesCardList/MoviesCardList';
+import MoreButton from './MoreButton/MoreButton';
 
 const Movies = memo(() => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const showMoreCards = useCallback(() => {
+    setIsLoading(!isLoading);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, [isLoading]);
+
   return (
     <section className="movies">
-      Movies
       <SearchForm />
-      <Preloader />
+      <MoviesCardList />
+      <MoreButton
+        isLoading={isLoading}
+        showMoreCards={showMoreCards}
+      />
     </section>
   );
 });

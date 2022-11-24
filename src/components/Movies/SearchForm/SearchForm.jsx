@@ -14,9 +14,10 @@ const SearchForm = memo(() => {
     setIsToggled(!isToggled);
   }, [isToggled]);
 
-  console.log(isToggled);
-
-  if (path.pathname === '/movies' || path.pathname === '/saved-movies') {
+  if (
+    path.pathname === '/movies' ||
+    path.pathname === '/saved-movies'
+  ) {
     return (
       <section className="search">
         <form className="search__form">

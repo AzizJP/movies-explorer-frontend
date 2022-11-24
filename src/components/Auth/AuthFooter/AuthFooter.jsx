@@ -14,7 +14,7 @@ const AuthFooter = memo(
 
     return (
       <div className="auth__footer">
-        <button type="button" className="auth__button">
+        <button type="submit" className="auth__button button-hover">
           {buttonText}
         </button>
         <div className="auth__redirect">

@@ -19,6 +19,7 @@
   line-height: 0.9375rem;
   text-align: center;
   color: #ffffff;
+  cursor: pointer;
 }
 
 .auth__redirect {

@@ -14,10 +14,16 @@ const Header = memo(({ openMenu }) => {
           <Logo className="header__logo-image" />
         </Link>
         <section className="header__authorization-section">
-          <Link to="/signup" className="header__register-link link-hover">
+          <Link
+            to="/signup"
+            className="header__register-link link-hover"
+          >
             Регистрация
           </Link>
-          <Link to="/movies" className="header__login-link button-hover">
+          <Link
+            to="/signin"
+            className="header__login-link button-hover"
+          >
             Войти
           </Link>
         </section>
@@ -42,16 +48,25 @@ const Header = memo(({ openMenu }) => {
             >
               Фильмы
             </Link>
-            <Link to="/saved-movies" className="header__link link-hover">
+            <Link
+              to="/saved-movies"
+              className="header__link link-hover"
+            >
               Сохраненные фильмы
             </Link>
           </div>
         </section>
         <section className="header__profile-section">
-          <Link to="/profile" className="header__profile-link link-hover">
+          <Link
+            to="/profile"
+            className="header__profile-link link-hover"
+          >
             Аккаунт
           </Link>
-          <Link to="/profile" className="header__profile-button button-hover">
+          <Link
+            to="/profile"
+            className="header__profile-button button-hover"
+          >
             <ProfileIcon className="header__profile-icon" />
           </Link>
         </section>

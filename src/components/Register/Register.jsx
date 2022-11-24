@@ -1,4 +1,5 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import AuthFooter from '../Auth/AuthFooter/AuthFooter';
 import AuthForm from '../Auth/AuthForm/AuthForm';
@@ -7,8 +8,18 @@ import AuthHeader from '../Auth/AuthHeader/AuthHeader';
 import './Register.css';
 
 const Register = memo(() => {
+  const history = useHistory();
+
+  const handleSubmit = useCallback(
+    evt => {
+      evt.preventDefault();
+      history.push('/signin');
+    },
+    [history]
+  );
+
   return (
-    <section className="register">
+    <form className="register" onSubmit={handleSubmit}>
       <AuthHeader title={'Добро пожаловать'} />
       <AuthForm isLogin={false} />
       <AuthFooter
@@ -16,7 +27,7 @@ const Register = memo(() => {
         redirectTitle="Уже зарегистрированы?"
         redirectText="Войти"
       />
-    </section>
+    </form>
   );
 });
 
