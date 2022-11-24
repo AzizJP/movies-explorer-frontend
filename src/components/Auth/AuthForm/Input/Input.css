@@ -23,6 +23,10 @@
 }
 
 .input__error {
+  border-bottom: 1px solid #ee3465;
+}
+
+.input__error-text {
   position: absolute;
   bottom: -1rem;
   margin: 0;
