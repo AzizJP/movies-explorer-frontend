@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import Input from './Input/Input';
 
@@ -7,13 +7,17 @@ import './AuthForm.css';
 
 const AuthForm = memo(({ isLogin, children }) => {
   const history = useHistory();
+  const path = useLocation();
 
   const handleSubmit = useCallback(
     evt => {
       evt.preventDefault();
-      history.push('/signin');
+      if (path.pathname === '/signup') {
+        return history.push('/signin');
+      }
+      return history.push('/movies');
     },
-    [history]
+    [history, path]
   );
 
   return (
