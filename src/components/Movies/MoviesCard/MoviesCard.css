@@ -49,6 +49,7 @@
 
 .movies-card__icon-wrapper {
   padding: 0.4375rem 0.625rem 2rem 0;
+  transition: opacity linear 0.2s;
 }
 
 .movies-card__icon {
@@ -98,5 +99,9 @@
   }
   .movies-card__icon-wrapper {
     padding: 0.5625rem 1rem 2.4375rem 0;
+  }
+  .movies-card__icon-wrapper:hover {
+    opacity: 0.6;
+    transition: opacity linear 0.2s;
   }
 }

@@ -27,21 +27,23 @@ const Portfolio = memo(() => {
       <AboutMe />
       <div className="portfolio__projects">
         <h5 className="portfolio__projects_title">Портфолио</h5>
-        {projects.map(({ name, link }) => (
-          <div key={name} className="portfolio__projects_underline">
-            <a
-              href={link}
-              target="_blank"
-              className="portfolio__projects_link-container"
-              rel="noreferrer"
-            >
-              <h6 className="portfolio__projects_name">{name}</h6>
-              <span className="portfolio__projects_image">
-                <Arrow />
-              </span>
-            </a>
-          </div>
-        ))}
+        <ul className="portfolio__projects_list">
+          {projects.map(({ name, link }) => (
+            <li key={name} className="portfolio__projects_underline">
+              <a
+                href={link}
+                target="_blank"
+                className="portfolio__projects_link-container"
+                rel="noreferrer"
+              >
+                <h6 className="portfolio__projects_name">{name}</h6>
+                <span className="portfolio__projects_image">
+                  <Arrow />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

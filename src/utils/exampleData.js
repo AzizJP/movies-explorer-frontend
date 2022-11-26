@@ -6,7 +6,7 @@ export const exampleData = [
     title: '«Роллинг Стоунз» в изгнании',
     duration: 61,
     inSaved: true,
-    amISaved: false,
+    amISaved: true,
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ export const exampleData = [
     title: 'All Tomorrows Parties',
     duration: 61,
     inSaved: false,
-    amISaved: false,
+    amISaved: true,
   },
   {
     id: 3,
@@ -24,7 +24,7 @@ export const exampleData = [
     title: '«Роллинг Стоунз» в изгнании',
     duration: 61,
     inSaved: true,
-    amISaved: false,
+    amISaved: true,
   },
   {
     id: 4,
@@ -42,7 +42,7 @@ export const exampleData = [
     title: '«Роллинг Стоунз» в изгнании',
     duration: 61,
     inSaved: true,
-    amISaved: false,
+    amISaved: true,
   },
   {
     id: 6,

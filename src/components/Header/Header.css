@@ -130,10 +130,7 @@
   }
 }
 
-@media screen and (min-width: 1280px) {
-  .header {
-    padding: 0 4.375rem;
-  }
+@media screen and (min-width: 769px) {
   .header__profile-section {
     display: flex;
   }
@@ -142,6 +139,12 @@
   }
   .header__links {
     display: flex;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .header {
+    padding: 0 4.375rem;
   }
   .header__logo-image:hover path {
     fill: #2be080;

@@ -16,6 +16,15 @@
   color: #a0a0a0;
 }
 
+.portfolio__projects_list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 2.5rem;
+}
+
 .portfolio__projects_underline {
   position: relative;
 }
@@ -53,8 +62,8 @@
 
 .portfolio__projects_image {
   width: 0.8rem;
-  height: 0.8rem;
-  align-self: start;
+  height: 1.75rem;
+  align-self: center;
 }
 
 .portfolio__projects_image svg {
@@ -77,7 +86,7 @@
   }
   .portfolio__projects_image {
     width: 1rem;
-    height: 1rem;
+    height: 3.125rem;
   }
 }
 
@@ -95,6 +104,6 @@
   }
   .portfolio__projects_image {
     width: 1.3rem;
-    height: 1.3rem;
+    height: 3.125rem;
   }
 }
