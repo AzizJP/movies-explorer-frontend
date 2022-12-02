@@ -27,9 +27,7 @@
 }
 
 .input__error-text {
-  position: absolute;
-  bottom: -1rem;
-  margin: 0;
+  height: 1.5rem;
   font-size: 0.625rem;
   line-height: 0.75rem;
   color: #ee3465;

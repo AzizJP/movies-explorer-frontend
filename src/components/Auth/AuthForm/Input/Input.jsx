@@ -4,6 +4,7 @@ import './Input.css';
 
 const Input = memo(
   ({
+    inputName,
     title,
     errorText,
     isValid,
@@ -12,6 +13,7 @@ const Input = memo(
     placeholder,
     value,
     onChange,
+    type,
   }) => {
     return (
       <div className="input__wrapper">
@@ -20,15 +22,14 @@ const Input = memo(
           minLength={minLength}
           maxLength={maxLength}
           required
-          type="text"
+          type={type}
           className={`input ${!isValid ? 'input__error' : ''}`}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          name={inputName}
         />
-        {!isValid ? (
-          <p className="input__error-text">{errorText}</p>
-        ) : null}
+        <span className="input__error-text">{errorText}</span>
       </div>
     );
   }
