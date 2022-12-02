@@ -1,0 +1,138 @@
+.about-project__wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 4.375rem 1.125rem;
+}
+
+.title {
+  position: relative;
+  margin: 0 0 5.5625rem;
+  width: 100%;
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.375rem;
+  letter-spacing: -0.04em;
+}
+
+.title:before {
+  position: absolute;
+  bottom: -1.75rem;
+  content: '';
+  background-color: black;
+  width: 100%;
+  height: 1px;
+}
+
+.about-project__text-group_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+  margin-bottom: 3.75rem;
+}
+
+.about-project__text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.about-project__subtitle {
+  margin: 0;
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.375rem;
+  letter-spacing: -0.04em;
+}
+
+.about-project__text {
+  margin: 0;
+  font-size: 0.6875rem;
+  line-height: 1rem;
+}
+
+.about-project__duration {
+  display: flex;
+  align-items: center;
+  font-size: 0.6875rem;
+  line-height: 2.1875rem;
+}
+
+.about-project__duration-text {
+  margin: 0;
+  text-align: center;
+}
+
+.about-project__duration-text_back-end {
+  width: 20%;
+  min-width: 6.25rem;
+  background-color: #3456f3;
+  color: #ffffff;
+}
+
+.about-project__duration-text_front-end {
+  flex-grow: 1;
+  background-color: #f2f2f2;
+  color: black;
+}
+
+.about-project__duration-text_clear-color {
+  background-color: #fafafa;
+  color: #a0a0a0;
+}
+
+@media screen and (min-width: 768px) {
+  .about-project__wrapper {
+    padding: 5.625rem 3.125rem;
+  }
+  .title {
+    margin-bottom: 5.875rem;
+    font-size: 1.375rem;
+    line-height: 1.6875rem;
+  }
+  .title:before {
+    bottom: -1.4375rem;
+  }
+  .about-project__text-group_wrapper {
+    flex-direction: row;
+    gap: 1.875rem;
+    margin-bottom: 5.8125rem;
+  }
+  .about-project__text-group {
+    gap: 1.375rem;
+  }
+  .about-project__subtitle {
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+  }
+  .about-project__text {
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+  }
+  .about-project__duration {
+    font-size: 0.875rem;
+    line-height: 2.25rem;
+  }
+  .about-project__duration-text_back-end {
+    min-width: 8.75rem;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .about-project__wrapper {
+    padding: 6.875rem 4.375rem;
+  }
+  .about-project__text-group_wrapper {
+    gap: 2.5rem;
+    margin-bottom: 6.875rem;
+  }
+  .about-project__text-group {
+    gap: 1.625rem;
+  }
+  .about-project__text {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .about-project__duration-text_back-end {
+    min-width: 14.25rem;
+  }
+}

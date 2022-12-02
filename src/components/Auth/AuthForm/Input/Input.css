@@ -1,0 +1,36 @@
+.input__wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+}
+
+.input__title {
+  margin: 0;
+  font-weight: 400;
+  font-size: 0.625rem;
+  line-height: 0.75rem;
+  color: #a0a0a0;
+}
+
+.input {
+  padding: 0 0 0.625rem;
+  border: none;
+  border-bottom: 1px solid #e8e8e8;
+  background-color: #fafafa;
+  font-size: 0.875rem;
+  line-height: 1.0625;
+}
+
+.input__error {
+  border-bottom: 1px solid #ee3465;
+}
+
+.input__error-text {
+  position: absolute;
+  bottom: -1rem;
+  margin: 0;
+  font-size: 0.625rem;
+  line-height: 0.75rem;
+  color: #ee3465;
+}
