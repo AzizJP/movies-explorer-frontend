@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import './AuthFooter.css';
 
 const AuthFooter = memo(
-  ({ buttonText, redirectTitle, redirectText, isValid }) => {
+  ({ buttonText, redirectTitle, redirectText, isValid, message }) => {
     const path = useLocation();
 
     const redirectPlace = useMemo(() => {
@@ -14,6 +14,7 @@ const AuthFooter = memo(
 
     return (
       <div className="auth__footer">
+        <span className="input__error-text">{message}</span>
         <button
           type="submit"
           className="auth__button button-hover"

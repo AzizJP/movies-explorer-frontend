@@ -7,7 +7,7 @@ import AuthHeader from '../Auth/AuthHeader/AuthHeader';
 
 import './Register.css';
 
-const Register = memo(({ onRegister, isRequesting }) => {
+const Register = memo(({ onRegister, message }) => {
   const {
     values,
     handleChange,
@@ -75,6 +75,7 @@ const Register = memo(({ onRegister, isRequesting }) => {
           isValid={
             isValid['name'] && isValid['email'] && isValid['password']
           }
+          message={message}
         />
       </AuthForm>
     </section>

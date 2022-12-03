@@ -1,0 +1,102 @@
+.popup {
+  display: flex;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.5s linear;
+  z-index: 0;
+}
+
+.popup_opened {
+  z-index: 3;
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.5s linear;
+}
+
+.popup__info-tooltip {
+  margin: 50px 80px 40px;
+  width: 120px;
+  height: 120px;
+  background: url(../../../images/check-mark.svg) no-repeat center /
+    contain;
+}
+
+.popup__container {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background-color: #ffffff;
+  border-radius: 10px;
+  width: 282px;
+  min-height: 181px;
+  margin: 0;
+  position: relative;
+}
+
+.popup__info-tooltip_type_error {
+  background: url(../../../images/cross.svg) no-repeat center /
+    contain;
+}
+
+.popup__info-tooltip_title {
+  margin: 0 18px 50px;
+  padding: 0;
+  color: black;
+  font-family: 'Inter', 'Verdana', 'Tahoma', sans-serif;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 1.25rem;
+  line-height: 1.5125rem;
+  text-align: center;
+}
+
+.popup__close {
+  background: url(../../../images/close-icon.svg) no-repeat center /
+    contain;
+  border: none;
+  position: absolute;
+  top: -36px;
+  right: 5px;
+  background-color: rgba(255, 255, 255, 0);
+  width: 20px;
+  min-height: 20px;
+  cursor: pointer;
+  transition: opacity 0.5s linear;
+  padding: 0;
+  margin: 0;
+}
+
+@media screen and (min-width: 620px) {
+  .popup__info-tooltip {
+    margin: 60px 155px 32px;
+  }
+  .popup__container {
+    width: 430px;
+  }
+  .popup__info-tooltip_title {
+    margin: 0 36px 60px;
+    font-size: 1.5rem;
+    line-height: 1.815625rem;
+  }
+  .popup__close {
+    top: -40px;
+    right: -40px;
+    width: 32px;
+    min-height: 32px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .popup__close:hover {
+    opacity: 0.6;
+    transition: opacity 0.1s linear;
+  }
+}

@@ -14,6 +14,7 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import * as MainApi from '../../utils/MainApi';
 
 import './App.css';
+import InfoTooltip from '../Shared/InfoTooltip/InfoTooltip';
 
 const App = memo(() => {
   const [currentUser, setCurrentUser] = useState({
@@ -23,21 +24,16 @@ const App = memo(() => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [message, setMessage] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [isRegisterInfoTooltipOpen, setIsRegisterInfoTooltipOpen] =
     useState(false);
   const [isLoginInfoTooltipOpen, setIsLoginInfoTooltipOpen] =
     useState(false);
 
-  const history = useHistory();
-
-  const resetForm = useCallback(() => {
-    setCurrentUser({ name: '' });
-    setPassword('');
-    setEmail('');
+  const resetErrorMessage = useCallback(() => {
     setMessage('');
   }, []);
+
+  const history = useHistory();
 
   useEffect(() => {
     const closeByEscape = evt => {
@@ -60,11 +56,15 @@ const App = memo(() => {
   }, []);
 
   const handleRegisterClick = useCallback(() => {
-    setIsRegisterInfoTooltipOpen(!isRegisterInfoTooltipOpen);
-  }, [isRegisterInfoTooltipOpen]);
+    setIsRegisterInfoTooltipOpen(true);
+  }, []);
   const handleLoginClick = useCallback(() => {
-    setIsLoginInfoTooltipOpen(!isLoginInfoTooltipOpen);
-  }, [isLoginInfoTooltipOpen]);
+    setIsLoginInfoTooltipOpen(true);
+  }, []);
+  const closeInfoTooltip = useCallback(() => {
+    setIsRegisterInfoTooltipOpen(false);
+    setIsLoginInfoTooltipOpen(false);
+  }, []);
 
   const handleRegister = ({ name, email, password }) => {
     MainApi.register(name, email, password)
@@ -75,34 +75,40 @@ const App = memo(() => {
         if (res.data) {
           setIsSuccess(true);
           setLoggedIn(true);
-          resetForm();
+          resetErrorMessage();
           history.push('/signin');
+        }
+        if (res.message) {
+          throw new Error(res.message);
         }
       })
       .then(() => handleRegisterClick())
-      .catch(err =>
-        setMessage(err.message || 'Что-то пошло не так!')
-      );
+      .catch(err => {
+        handleRegisterClick();
+        setMessage(err.message || 'Что-то пошло не так!');
+      });
   };
 
   const handleLogin = ({ email, password }) => {
     MainApi.authorize(email, password)
       .then(res => {
         if (!res || res.message) {
-          setIsSuccess(false);
-          handleLoginClick();
-          throw new Error('Неправильное имя пользователя или пароль');
+          throw new Error(
+            'Неверный адрес электронной почты или пароль'
+          );
         }
         if (res.token) {
           localStorage.setItem('token', res.token);
           setLoggedIn(true);
-          resetForm();
+          resetErrorMessage();
           history.push('/movies');
         }
       })
-      .catch(err =>
-        setMessage(err.message || 'Что-то пошло не так!')
-      );
+      .catch(err => {
+        setIsSuccess(false);
+        handleLoginClick();
+        setMessage(err.message || 'Что-то пошло не так!');
+      });
   };
 
   return (
@@ -137,6 +143,19 @@ const App = memo(() => {
           closeMenu={handleCloseMenuButtonClick}
         />
         <Footer />
+        <InfoTooltip
+          isSuccess={isSuccess}
+          isOpen={isRegisterInfoTooltipOpen}
+          onClose={closeInfoTooltip}
+          successText="Вы успешно зарегестрированы"
+          errorText={message}
+        />
+        <InfoTooltip
+          isSuccess={isSuccess}
+          isOpen={isLoginInfoTooltipOpen}
+          onClose={closeInfoTooltip}
+          errorText={message}
+        />
       </div>
     </CurrentUserContext.Provider>
   );
