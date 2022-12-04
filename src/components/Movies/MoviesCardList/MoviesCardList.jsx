@@ -3,19 +3,18 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 
 import './MoviesCardList.css';
 
-/*it will changing to API*/
-import { exampleData } from '../../../utils/exampleData';
+const baseUrlForImage = 'https://api.nomoreparties.co';
 
-const MoviesCardList = memo(() => {
+const MoviesCardList = memo(({ showMovies, notFoundMovies }) => {
   return (
     <section className="movies-list">
-      {exampleData.map(({ id, image, title, duration, inSaved }) => (
+      {notFoundMovies ? <span>Ничего не найдено</span> : null}
+      {showMovies.map(film => (
         <MoviesCard
-          key={id}
-          image={image}
-          title={title}
-          duration={duration}
-          inSaved={inSaved}
+          key={film.id}
+          image={baseUrlForImage + film.image.url}
+          title={film.nameRU}
+          duration={film.duration}
         />
       ))}
     </section>

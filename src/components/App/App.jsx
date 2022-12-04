@@ -11,21 +11,29 @@ import NotFound from '../NotFound/NotFound';
 import Profile from '../Profile/Profile';
 import Register from '../Register/Register';
 import SavedMovies from '../SavedMovies/SavedMovies';
-import * as MainApi from '../../utils/MainApi';
-
-import './App.css';
 import InfoTooltip from '../Shared/InfoTooltip/InfoTooltip';
 import ProtectedRoute from '../Shared/ProtectedRoute/ProtectedRoute';
+import * as MainApi from '../../utils/MainApi';
+import { parseJwt } from '../../utils/helpers';
+
+import './App.css';
+import { useMemo } from 'react';
 
 const App = memo(() => {
   const history = useHistory();
+  const isTokenValid = useMemo(() => {
+    const jwt = localStorage.getItem('token');
+    if (!jwt) return;
+    const kek = parseJwt(jwt);
+    return Date.now() / 1000 < kek.exp;
+  }, []);
 
   const [currentUser, setCurrentUser] = useState({
     name: '',
     email: '',
   });
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(isTokenValid);
   const [isSuccess, setIsSuccess] = useState(false);
   const [message, setMessage] = useState('');
   const [isRegisterInfoTooltipOpen, setIsRegisterInfoTooltipOpen] =
@@ -143,7 +151,7 @@ const App = memo(() => {
   }, []);
 
   const tokenCheck = useCallback(
-    token => {
+    token =>
       MainApi.getContent(token).then(res => {
         if (res) {
           setLoggedIn(true);
@@ -153,8 +161,7 @@ const App = memo(() => {
           exitFromAccount();
           history.push('/signin');
         }
-      });
-    },
+      }),
     [history, exitFromAccount]
   );
 
@@ -162,9 +169,8 @@ const App = memo(() => {
     let jwt = localStorage.getItem('token');
     if (jwt) {
       tokenCheck(jwt);
-      history.push('/profile');
     }
-  }, [loggedIn, history, tokenCheck]);
+  }, [loggedIn, tokenCheck]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

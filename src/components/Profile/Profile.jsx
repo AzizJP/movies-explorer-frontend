@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
@@ -6,8 +7,24 @@ import './Profile.css';
 
 const Profile = memo(
   ({ profileInfo, exitFromAccount, updateProfileInfo }) => {
-    const { values, handleChange, errors, isValid } =
+    const { values, setValues, handleChange, errors, isValid } =
       useFormWithValidation(
+        {
+          'name': '',
+          'email': '',
+        },
+        {
+          'name': '',
+          'email': '',
+        },
+        {
+          'name': true,
+          'email': true,
+        }
+      );
+
+    useEffect(() => {
+      setValues(
         {
           'name': profileInfo.name,
           'email': profileInfo.email,
@@ -21,6 +38,8 @@ const Profile = memo(
           'email': true,
         }
       );
+    }, [profileInfo, setValues]);
+
     const [canEdit, setCanEdit] = useState(false);
 
     const toggleProfileEdit = useCallback(() => {
@@ -54,7 +73,6 @@ const Profile = memo(
       }
       return false;
     }, [editButtonText, isValid]);
-
     return (
       <section className="profile">
         <div className="profile__info">

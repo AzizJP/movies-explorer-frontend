@@ -11,40 +11,47 @@ export function useFormWithValidation(
   const [isValid, setIsValid] = useState(initialValid);
 
   const handleChange = evt => {
-    const regexName = /^(([a-zA-Z]|[а-яА-Я])(\s|-|))+$/;
+    const regexName = /^(([a-zA-Z]|[а-яёЁА-Я])(\s|-|))+$/;
     const {
       name,
       value,
       validity: { valid },
     } = evt.target;
     const validation = () => {
-      if(name === 'email') {
-        return isEmail(value)
+      if (name === 'email') {
+        return isEmail(value);
       }
-      if(name === 'name') {
-        return regexName.test(value)&&valid
+      if (name === 'name') {
+        return regexName.test(value) && valid;
       }
-      return valid
-    }
-    const validationMessage =() => {
-      if(name === 'email') {
-        if(!validation()) {
-          if(value === '') {
-            return 'Заполните это поле.'
+      return valid;
+    };
+    const validationMessage = () => {
+      if (name === 'email') {
+        if (!validation()) {
+          if (value === '') {
+            return 'Заполните это поле.';
           }
-          return 'Поле должно соответствовать типу: example@yandex.com. Введите валидный адрес электронной почты'
+          return 'Поле должно соответствовать типу: example@yandex.com. Введите валидный адрес электронной почты';
         }
       }
-      if(name === 'name') {
-        if(!validation()) {
-          if(value === '') {
-            return 'Заполните это поле.'
+      if (name === 'name') {
+        if (!validation()) {
+          if (value === '') {
+            return 'Заполните это поле.';
           }
-          return 'Поле должно начинаться с буквы и может содержать только кириллицу, латиницу, пробел и дефис'
+          return 'Поле должно начинаться с буквы и может содержать только кириллицу, латиницу, пробел и дефис';
         }
       }
-      return evt.target.validationMessage
-    }
+      if (name === 'search') {
+        if (!validation()) {
+          if (value === '') {
+            return 'Нужно ввести ключевое слово';
+          }
+        }
+      }
+      return evt.target.validationMessage;
+    };
     setValues({ ...values, [name]: value });
     setErrors({ ...errors, [name]: validationMessage() });
     setIsValid({ ...isValid, [name]: validation() });
