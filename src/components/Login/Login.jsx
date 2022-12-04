@@ -7,7 +7,7 @@ import AuthHeader from '../Auth/AuthHeader/AuthHeader';
 
 import './Login.css';
 
-const Login = memo(({ onLogin, message }) => {
+const Login = memo(({ onLogin, message, clearErrorMessage }) => {
   const {
     values,
     handleChange,
@@ -66,6 +66,7 @@ const Login = memo(({ onLogin, message }) => {
           redirectText="Регистрация"
           isValid={isValid['email'] && isValid['password']}
           message={message}
+          clearErrorMessage={clearErrorMessage}
         />
       </AuthForm>
     </section>

@@ -4,7 +4,14 @@ import { Link, useLocation } from 'react-router-dom';
 import './AuthFooter.css';
 
 const AuthFooter = memo(
-  ({ buttonText, redirectTitle, redirectText, isValid, message }) => {
+  ({
+    buttonText,
+    redirectTitle,
+    redirectText,
+    isValid,
+    message,
+    clearErrorMessage,
+  }) => {
     const path = useLocation();
 
     const redirectPlace = useMemo(() => {
@@ -24,7 +31,11 @@ const AuthFooter = memo(
         </button>
         <div className="auth__redirect">
           <h4 className="auth__redirect_subtitle">{redirectTitle}</h4>
-          <Link to={redirectPlace} className="auth__redirect_link">
+          <Link
+            to={redirectPlace}
+            className="auth__redirect_link"
+            onClick={clearErrorMessage}
+          >
             {redirectText}
           </Link>
         </div>

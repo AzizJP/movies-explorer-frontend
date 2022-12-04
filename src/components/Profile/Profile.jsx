@@ -1,34 +1,45 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
 import './Profile.css';
 
 const Profile = memo(
-  ({ profileInfo = { name: 'Азиз', email: 'aziz@yandex.ru' } }) => {
-    const [formState, setFormState] = useState({
-      name: '',
-      email: '',
-      ...profileInfo,
-    });
+  ({ profileInfo, exitFromAccount, updateProfileInfo }) => {
+    const { values, handleChange, errors, isValid } =
+      useFormWithValidation(
+        {
+          'name': profileInfo.name,
+          'email': profileInfo.email,
+        },
+        {
+          'name': '',
+          'email': '',
+        },
+        {
+          'name': true,
+          'email': true,
+        }
+      );
     const [canEdit, setCanEdit] = useState(false);
 
-    const handleNameChange = useCallback(
-      evt => {
-        setFormState({ ...formState, name: evt.target.value });
-      },
-      [formState]
-    );
-
-    const handleEmailChange = useCallback(
-      evt => {
-        setFormState({ ...formState, email: evt.target.value });
-      },
-      [formState]
-    );
-
     const toggleProfileEdit = useCallback(() => {
+      let token = localStorage.getItem('token');
       setCanEdit(!canEdit);
-    }, [canEdit]);
+      if (canEdit) {
+        if (
+          !(
+            profileInfo.name === values['name'] &&
+            profileInfo.email === values['email']
+          )
+        )
+          updateProfileInfo({
+            name: values['name'],
+            email: values['email'],
+            token,
+          });
+      }
+    }, [canEdit, updateProfileInfo, values, profileInfo]);
 
     const editButtonText = useMemo(() => {
       if (canEdit) {
@@ -37,16 +48,31 @@ const Profile = memo(
       return 'Редактировать';
     }, [canEdit]);
 
+    const disableButton = useCallback(() => {
+      if (editButtonText === 'Принять') {
+        return !(isValid['name'] && isValid['email']);
+      }
+      return false;
+    }, [editButtonText, isValid]);
+
     return (
       <section className="profile">
         <div className="profile__info">
-          <h2 className="profile__title">{`Привет, ${formState.name}!`}</h2>
+          <h2 className="profile__title">{`Привет, ${values['name']}!`}</h2>
+          <span className="input__error-text profile__error-text">
+            {errors['name']}
+          </span>
           <div className="profile__info_section">
             <h4 className="profile__info_title">Имя</h4>
             <input
               className="profile__info_text"
-              value={formState.name}
-              onChange={handleNameChange}
+              minLength={2}
+              maxLength={30}
+              required
+              type="text"
+              name="name"
+              value={values['name']}
+              onChange={handleChange}
               disabled={!canEdit}
             />
           </div>
@@ -54,21 +80,30 @@ const Profile = memo(
             <h4 className="profile__info_title">E-mail</h4>
             <input
               className="profile__info_text"
-              value={formState.email}
-              onChange={handleEmailChange}
+              required
+              type="email"
+              name="email"
+              value={values['email']}
+              onChange={handleChange}
               disabled={!canEdit}
             />
           </div>
+          <span className="input__error-text">{errors['email']}</span>
         </div>
         <div className="profile__edit-section">
           <button
             type="button"
             className="profile__edit"
             onClick={toggleProfileEdit}
+            disabled={disableButton()}
           >
             {editButtonText}
           </button>
-          <Link to="/" className="profile__exit">
+          <Link
+            to="/"
+            className="profile__exit"
+            onClick={exitFromAccount}
+          >
             Выйти из аккаунта
           </Link>
         </div>

@@ -41,3 +41,14 @@ export const getContent = token => {
     },
   }).then(res => checkResponse(res));
 };
+
+export const updateProfile = (name, email, token) => {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ 'name': name, 'email': email }),
+  }).then(res => checkResponse(res));
+}

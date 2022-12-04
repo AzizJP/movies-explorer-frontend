@@ -11,7 +11,7 @@ export function useFormWithValidation(
   const [isValid, setIsValid] = useState(initialValid);
 
   const handleChange = evt => {
-    const regexName = /^([a-zA-Z]|[а-яА-Я](| |-|))+$/;
+    const regexName = /^(([a-zA-Z]|[а-яА-Я])(\s|-|))+$/;
     const {
       name,
       value,
@@ -22,7 +22,7 @@ export function useFormWithValidation(
         return isEmail(value)
       }
       if(name === 'name') {
-        return regexName.test(value)
+        return regexName.test(value)&&valid
       }
       return valid
     }

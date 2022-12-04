@@ -7,79 +7,84 @@ import AuthHeader from '../Auth/AuthHeader/AuthHeader';
 
 import './Register.css';
 
-const Register = memo(({ onRegister, message }) => {
-  const {
-    values,
-    handleChange,
-    errors,
-    isValid,
-    setValues,
-    resetForm,
-  } = useFormWithValidation(
-    {
-      'name': '',
-      'email': '',
-      'password': '',
-    },
-    {
-      'name': '',
-      'email': '',
-      'password': '',
-    },
-    {
-      'name': false,
-      'email': false,
-      'password': false,
-    }
-  );
-
-  const clearForm = useCallback(() => {
-    setValues({});
-    resetForm(
-      { 'name': '', 'email': '', 'password': '' },
-      { 'name': '', 'email': '', 'password': '' }
+const Register = memo(
+  ({ onRegister, message, clearErrorMessage }) => {
+    const {
+      values,
+      handleChange,
+      errors,
+      isValid,
+      setValues,
+      resetForm,
+    } = useFormWithValidation(
+      {
+        'name': '',
+        'email': '',
+        'password': '',
+      },
+      {
+        'name': '',
+        'email': '',
+        'password': '',
+      },
+      {
+        'name': false,
+        'email': false,
+        'password': false,
+      }
     );
-  }, [setValues, resetForm]);
 
-  const handleSubmit = evt => {
-    evt.preventDefault();
-    onRegister({
-      name: values['name'],
-      email: values['email'],
-      password: values['password'],
-    });
-    clearForm();
-  };
+    const clearForm = useCallback(() => {
+      setValues({});
+      resetForm(
+        { 'name': '', 'email': '', 'password': '' },
+        { 'name': '', 'email': '', 'password': '' }
+      );
+    }, [setValues, resetForm]);
 
-  return (
-    <section className="register">
-      <AuthHeader title={'Добро пожаловать'} />
-      <AuthForm
-        onSubmit={handleSubmit}
-        nameValue={values['name']}
-        nameValidationErrorMessage={errors['name']}
-        isNameValid={isValid['name']}
-        emailValue={values['email']}
-        emailValidationErrorMessage={errors['email']}
-        isEmailValid={isValid['email']}
-        passwordValue={values['password']}
-        passwordValidationErrorMessage={errors['password']}
-        isPasswordValid={isValid['password']}
-        handleChange={handleChange}
-        isLogin={false}
-      >
-        <AuthFooter
-          buttonText="Зарегистрироваться"
-          redirectTitle="Уже зарегистрированы?"
-          redirectText="Войти"
-          isValid={
-            isValid['name'] && isValid['email'] && isValid['password']
-          }
-          message={message}
-        />
-      </AuthForm>
-    </section>
-  );
-});
+    const handleSubmit = evt => {
+      evt.preventDefault();
+      onRegister({
+        name: values['name'],
+        email: values['email'],
+        password: values['password'],
+      });
+      clearForm();
+    };
+
+    return (
+      <section className="register">
+        <AuthHeader title={'Добро пожаловать'} />
+        <AuthForm
+          onSubmit={handleSubmit}
+          nameValue={values['name']}
+          nameValidationErrorMessage={errors['name']}
+          isNameValid={isValid['name']}
+          emailValue={values['email']}
+          emailValidationErrorMessage={errors['email']}
+          isEmailValid={isValid['email']}
+          passwordValue={values['password']}
+          passwordValidationErrorMessage={errors['password']}
+          isPasswordValid={isValid['password']}
+          handleChange={handleChange}
+          isLogin={false}
+        >
+          <AuthFooter
+            buttonText="Зарегистрироваться"
+            redirectTitle="Уже зарегистрированы?"
+            redirectText="Войти"
+            isValid={
+              isValid['name'] &&
+              isValid['email'] &&
+              isValid['password']
+            }
+            message={message}
+            clearErrorMessage={clearErrorMessage}
+          />
+        </AuthForm>
+      </section>
+    );
+  }
+);
 
 export default Register;

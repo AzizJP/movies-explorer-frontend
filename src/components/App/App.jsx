@@ -15,10 +15,14 @@ import * as MainApi from '../../utils/MainApi';
 
 import './App.css';
 import InfoTooltip from '../Shared/InfoTooltip/InfoTooltip';
+import ProtectedRoute from '../Shared/ProtectedRoute/ProtectedRoute';
 
 const App = memo(() => {
+  const history = useHistory();
+
   const [currentUser, setCurrentUser] = useState({
     name: '',
+    email: '',
   });
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -28,12 +32,8 @@ const App = memo(() => {
     useState(false);
   const [isLoginInfoTooltipOpen, setIsLoginInfoTooltipOpen] =
     useState(false);
-
-  const resetErrorMessage = useCallback(() => {
-    setMessage('');
-  }, []);
-
-  const history = useHistory();
+  const [isProfileInfoTooltipOpen, setIsProfileInfoTooltipOpen] =
+    useState(false);
 
   useEffect(() => {
     const closeByEscape = evt => {
@@ -61,9 +61,17 @@ const App = memo(() => {
   const handleLoginClick = useCallback(() => {
     setIsLoginInfoTooltipOpen(true);
   }, []);
+  const handleProfileUpdateClick = useCallback(() => {
+    setIsProfileInfoTooltipOpen(true);
+  }, []);
   const closeInfoTooltip = useCallback(() => {
     setIsRegisterInfoTooltipOpen(false);
     setIsLoginInfoTooltipOpen(false);
+  }, []);
+
+  const exitFromAccount = useCallback(() => {
+    setLoggedIn(false);
+    localStorage.clear();
   }, []);
 
   const handleRegister = ({ name, email, password }) => {
@@ -76,13 +84,15 @@ const App = memo(() => {
           setIsSuccess(true);
           setLoggedIn(true);
           resetErrorMessage();
-          history.push('/signin');
         }
         if (res.message) {
           throw new Error(res.message);
         }
       })
-      .then(() => handleRegisterClick())
+      .then(() => {
+        handleLogin({ email, password });
+        handleRegisterClick();
+      })
       .catch(err => {
         handleRegisterClick();
         setMessage(err.message || 'Что-то пошло не так!');
@@ -111,28 +121,93 @@ const App = memo(() => {
       });
   };
 
+  const handleProfileUpdate = ({ name, email, token }) => {
+    MainApi.updateProfile(name, email, token)
+      .then(res => {
+        if (res.status === 400 || res.message) {
+          throw new Error();
+        }
+        if (res) {
+          setCurrentUser({ name: res.name, email: res.email });
+          resetErrorMessage();
+        }
+      })
+      .catch(err => {
+        handleProfileUpdateClick();
+        setMessage(err.message || 'Что-то пошло не так!');
+      });
+  };
+
+  const resetErrorMessage = useCallback(() => {
+    setMessage('');
+  }, []);
+
+  const tokenCheck = useCallback(
+    token => {
+      MainApi.getContent(token).then(res => {
+        if (res) {
+          setLoggedIn(true);
+          setCurrentUser({ name: res.name, email: res.email });
+        }
+        if (res.message) {
+          exitFromAccount();
+          history.push('/signin');
+        }
+      });
+    },
+    [history, exitFromAccount]
+  );
+
+  useEffect(() => {
+    let jwt = localStorage.getItem('token');
+    if (jwt) {
+      tokenCheck(jwt);
+      history.push('/profile');
+    }
+  }, [loggedIn, history, tokenCheck]);
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header openMenu={handleMenuButtonClick} />
+        <Header
+          openMenu={handleMenuButtonClick}
+          loggedIn={loggedIn}
+        />
         <Switch>
           <Route exact path="/">
             <Main />
           </Route>
-          <Route path="/movies">
-            <Movies />
-          </Route>
-          <Route path="/saved-movies">
-            <SavedMovies />
-          </Route>
-          <Route path="/profile">
-            <Profile />
-          </Route>
+          <ProtectedRoute
+            path="/movies"
+            loggedIn={loggedIn}
+            component={Movies}
+          />
+          <ProtectedRoute
+            path="/saved-movies"
+            loggedIn={loggedIn}
+            component={SavedMovies}
+          />
+          <ProtectedRoute
+            path="/profile"
+            loggedIn={loggedIn}
+            component={Profile}
+            profileInfo={currentUser}
+            exitFromAccount={exitFromAccount}
+            updateProfileInfo={handleProfileUpdate}
+          />
           <Route path="/signup">
-            <Register onRegister={handleRegister} message={message} />
+            <Register
+              onRegister={handleRegister}
+              message={message}
+              clearErrorMessage={resetErrorMessage}
+            />
           </Route>
           <Route path="/signin">
-            <Login onLogin={handleLogin} message={message} />
+            <Login
+              onLogin={handleLogin}
+              message={message}
+              clearErrorMessage={resetErrorMessage}
+            />
           </Route>
           <Route path="*">
             <NotFound />
@@ -153,6 +228,12 @@ const App = memo(() => {
         <InfoTooltip
           isSuccess={isSuccess}
           isOpen={isLoginInfoTooltipOpen}
+          onClose={closeInfoTooltip}
+          errorText={message}
+        />
+        <InfoTooltip
+          isSuccess={isSuccess}
+          isOpen={isProfileInfoTooltipOpen}
           onClose={closeInfoTooltip}
           errorText={message}
         />
