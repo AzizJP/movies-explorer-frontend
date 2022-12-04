@@ -1,8 +1,5 @@
 import { memo } from 'react';
-import {
-  getWordEnding,
-  getYearsOld,
-} from '../../Shared/Functions/Functions';
+import { getWordEnding, getYearsOld } from '../../../utils/helpers';
 
 import './AboutMe.css';
 
