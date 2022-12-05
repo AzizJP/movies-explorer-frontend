@@ -4,15 +4,9 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import './MoviesCardList.css';
 
 const MoviesCardList = memo(
-  ({
-    showMovies,
-    notFoundMovies,
-    toggleMovieLike,
-    savedMoviesState,
-  }) => {
+  ({ showMovies, toggleMovieLike, savedMoviesState }) => {
     return (
       <section className="movies-list">
-        {notFoundMovies ? <span>Ничего не найдено</span> : null}
         {showMovies.map(film => (
           <MoviesCard
             key={film.id}

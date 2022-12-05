@@ -82,9 +82,11 @@ const Movies = memo(
           handleErrorMessageChange={handleErrorMessageChange}
         />
         {isLoading ? <Preloader /> : null}
+        {notFoundMovies ? (
+          <h3 className="movies__not-found">Ничего не найдено</h3>
+        ) : null}
         <MoviesCardList
           showMovies={showMovies}
-          notFoundMovies={notFoundMovies}
           toggleMovieLike={toggleMovieLike}
           savedMoviesState={savedMoviesState}
         />

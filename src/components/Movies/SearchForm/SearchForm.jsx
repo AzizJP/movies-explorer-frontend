@@ -6,6 +6,7 @@ import ToggleCheckbox from '../../Shared/ToggleCheckbox/ToggleCheckbox';
 
 import './SearchForm.css';
 import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const SearchForm = memo(
   ({
@@ -31,16 +32,24 @@ const SearchForm = memo(
         }
       );
 
+    useEffect(() => {
+      handleNotFoundMoviesChange(false);
+    }, [handleNotFoundMoviesChange, values]);
+
     const filterMovies = useCallback(
       movies => {
         const newMovies = movies.reduce((acc, item) => {
           const sameSearchName = item.nameRU
             .toLowerCase()
             .includes(values['search'].toLowerCase());
-          const sameId = foundMovies.some(
-            movie => movie.id === item.id
-          );
-          if (sameSearchName && !sameId) {
+          if (isToggled) {
+            const shortMovie = item.duration < 40;
+            if (sameSearchName && shortMovie) {
+              return [...acc, item];
+            }
+            return acc;
+          }
+          if (sameSearchName) {
             return [...acc, item];
           }
           return acc;
@@ -49,35 +58,14 @@ const SearchForm = memo(
           return handleNotFoundMoviesChange(true);
         }
         handleNotFoundMoviesChange(false);
-        handleFoundMoviesChange([...newMovies, ...foundMovies]);
+        handleFoundMoviesChange(newMovies);
       },
       [
         handleNotFoundMoviesChange,
         handleFoundMoviesChange,
-        foundMovies,
         values,
+        isToggled,
       ]
-    );
-
-    const filterSavedMovies = useCallback(
-      savedMovies => {
-        const newSavedMovies = savedMovies.reduce((acc, item) => {
-          const sameSearchName = item.nameRU
-            .toLowerCase()
-            .includes(values['search'].toLowerCase());
-          if (sameSearchName) {
-            return [...acc, item];
-          }
-          return acc;
-        }, []);
-
-        if (newSavedMovies.length === 0) {
-          return handleNotFoundMoviesChange(true);
-        }
-        handleNotFoundMoviesChange(false);
-        handleFoundMoviesChange(newSavedMovies);
-      },
-      [handleFoundMoviesChange, handleNotFoundMoviesChange, values]
     );
 
     const handleToggleButtonClick = useCallback(() => {
@@ -113,7 +101,7 @@ const SearchForm = memo(
             });
         }
         if (path.pathname === '/saved-movies') {
-          filterSavedMovies(foundMovies.reverse());
+          filterMovies(foundMovies.reverse());
         }
       },
       [
@@ -124,7 +112,6 @@ const SearchForm = memo(
         handleInfoTooltip,
         handleLoadingChange,
         filterMovies,
-        filterSavedMovies,
         foundMovies,
       ]
     );

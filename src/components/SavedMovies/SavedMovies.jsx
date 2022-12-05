@@ -31,8 +31,10 @@ const SavedMovies = memo(
           handleInfoTooltip={handleInfoTooltip}
           handleErrorMessageChange={handleErrorMessageChange}
         />
+        {notFoundSavedMovies ? (
+          <h3 className="movies__not-found">Ничего не найдено</h3>
+        ) : null}
         <MoviesCardSavedList
-          notFoundSavedMovies={notFoundSavedMovies}
           savedMoviesState={savedMoviesState}
           handleDeleteMovie={handleDeleteMovie}
         />
