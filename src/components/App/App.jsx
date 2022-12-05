@@ -40,8 +40,8 @@ const App = memo(() => {
     useState(false);
   const [isLoginInfoTooltipOpen, setIsLoginInfoTooltipOpen] =
     useState(false);
-  const [isProfileInfoTooltipOpen, setIsProfileInfoTooltipOpen] =
-    useState(false);
+  const [infoTooltipOpen, setInfoTooltipOpen] = useState(false);
+  const [savedMoviesState, setSavedMoviesState] = useState([]);
 
   useEffect(() => {
     const closeByEscape = evt => {
@@ -62,6 +62,12 @@ const App = memo(() => {
   const handleCloseMenuButtonClick = useCallback(() => {
     setIsOpenMenu(false);
   }, []);
+  const handleErrorMessageChange = useCallback(errorMessage => {
+    setMessage(errorMessage);
+  }, []);
+  const handleSavedMoviesChange = useCallback(newMovies => {
+    setSavedMoviesState(newMovies);
+  }, []);
 
   const handleRegisterClick = useCallback(() => {
     setIsRegisterInfoTooltipOpen(true);
@@ -69,12 +75,13 @@ const App = memo(() => {
   const handleLoginClick = useCallback(() => {
     setIsLoginInfoTooltipOpen(true);
   }, []);
-  const handleProfileUpdateClick = useCallback(() => {
-    setIsProfileInfoTooltipOpen(true);
+  const handleInfoTooltip = useCallback(() => {
+    setInfoTooltipOpen(true);
   }, []);
   const closeInfoTooltip = useCallback(() => {
     setIsRegisterInfoTooltipOpen(false);
     setIsLoginInfoTooltipOpen(false);
+    setInfoTooltipOpen(false);
   }, []);
 
   const exitFromAccount = useCallback(() => {
@@ -103,7 +110,9 @@ const App = memo(() => {
       })
       .catch(err => {
         handleRegisterClick();
-        setMessage(err.message || 'Что-то пошло не так!');
+        handleErrorMessageChange(
+          err.message || 'Что-то пошло не так!'
+        );
       });
   };
 
@@ -125,7 +134,9 @@ const App = memo(() => {
       .catch(err => {
         setIsSuccess(false);
         handleLoginClick();
-        setMessage(err.message || 'Что-то пошло не так!');
+        handleErrorMessageChange(
+          err.message || 'Что-то пошло не так!'
+        );
       });
   };
 
@@ -141,14 +152,16 @@ const App = memo(() => {
         }
       })
       .catch(err => {
-        handleProfileUpdateClick();
-        setMessage(err.message || 'Что-то пошло не так!');
+        handleInfoTooltip();
+        handleErrorMessageChange(
+          err.message || 'Что-то пошло не так!'
+        );
       });
   };
 
   const resetErrorMessage = useCallback(() => {
-    setMessage('');
-  }, []);
+    handleErrorMessageChange('');
+  }, [handleErrorMessageChange]);
 
   const tokenCheck = useCallback(
     token =>
@@ -172,6 +185,61 @@ const App = memo(() => {
     }
   }, [loggedIn, tokenCheck]);
 
+  useEffect(() => {
+    loggedIn &&
+      MainApi.getMovies()
+        .then(res => {
+          if (!res || res.status === 400) {
+            throw new Error('Что-то пошло не так!');
+          }
+          if (res) {
+            handleSavedMoviesChange(res);
+          }
+        })
+        .catch(err => {
+          handleInfoTooltip();
+          handleErrorMessageChange(
+            err.message || 'Что-то пошло не так!'
+          );
+        });
+  }, [
+    handleErrorMessageChange,
+    handleInfoTooltip,
+    handleSavedMoviesChange,
+    loggedIn,
+  ]);
+
+  const handleAddSavedMovie = useCallback(
+    movie => {
+      MainApi.addToFavorite(movie)
+        .then(newMovie => {
+          handleSavedMoviesChange([...savedMoviesState, newMovie]);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      return;
+    },
+    [handleSavedMoviesChange, savedMoviesState]
+  );
+
+  const handleDeleteMovie = useCallback(
+    id => {
+      handleSavedMoviesChange(prev =>
+        prev.filter(movie => movie._id !== id)
+      );
+      MainApi.deleteFromFavorite(id)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      return;
+    },
+    [handleSavedMoviesChange]
+  );
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -187,11 +255,21 @@ const App = memo(() => {
             path="/movies"
             loggedIn={loggedIn}
             component={Movies}
+            savedMoviesState={savedMoviesState}
+            handleDeleteMovie={handleDeleteMovie}
+            handleAddSavedMovie={handleAddSavedMovie}
+            handleInfoTooltip={handleInfoTooltip}
+            handleErrorMessageChange={handleErrorMessageChange}
           />
           <ProtectedRoute
             path="/saved-movies"
             loggedIn={loggedIn}
             component={SavedMovies}
+            savedMoviesState={savedMoviesState}
+            handleDeleteMovie={handleDeleteMovie}
+            handleSavedMoviesChange={handleSavedMoviesChange}
+            handleInfoTooltip={handleInfoTooltip}
+            handleErrorMessageChange={handleErrorMessageChange}
           />
           <ProtectedRoute
             path="/profile"
@@ -239,7 +317,7 @@ const App = memo(() => {
         />
         <InfoTooltip
           isSuccess={isSuccess}
-          isOpen={isProfileInfoTooltipOpen}
+          isOpen={infoTooltipOpen}
           onClose={closeInfoTooltip}
           errorText={message}
         />

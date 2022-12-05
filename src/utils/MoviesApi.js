@@ -9,10 +9,10 @@ const checkResponse = res => {
 };
 
 export const getContent = () => {
-    return fetch(`${BASE_URL}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then(res => checkResponse(res));
-  };
+  return fetch(`${BASE_URL}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then(res => checkResponse(res));
+};

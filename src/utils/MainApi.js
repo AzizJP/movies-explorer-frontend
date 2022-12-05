@@ -91,6 +91,16 @@ export const addToFavorite = ({
   }).then(res => checkResponse(res));
 };
 
+export const getMovies = () => {
+  return fetch(`${BASE_URL}/movies`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${getToken()}`,
+    },
+  }).then(res => checkResponse(res));
+};
+
 export const deleteFromFavorite = movieId => {
   return fetch(`${BASE_URL}/movies/${movieId}`, {
     method: 'DELETE',
