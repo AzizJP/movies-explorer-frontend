@@ -15,6 +15,7 @@
 
 - [Ссылка на проект в GitHub](https://github.com/AzizJP/movies-explorer-frontend)
 - [Ссылка на макет Figma](https://disk.yandex.ru/d/3habSvtnF5SqIw)
+- [Ссылка на Pull request](https://github.com/AzizJP/movies-explorer-frontend/pull/2)
 
 **Технологии применяемые в проекте**
 
