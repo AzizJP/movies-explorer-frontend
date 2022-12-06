@@ -112,7 +112,9 @@ const App = memo(() => {
         handleRegisterClick();
         handleErrorMessageChange(
           err.message || 'Что-то пошло не так!'
-        );
+        ).finally(() => {
+          setIsSuccess(false);
+        });
       });
   };
 
