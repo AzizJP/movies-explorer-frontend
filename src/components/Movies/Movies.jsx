@@ -58,14 +58,17 @@ const Movies = memo(
 
     const toggleMovieLike = useCallback(
       movie => {
+        if (savedMoviesState.length === 0) {
+          return handleAddSavedMovie(movie);
+        }
         if (!savedMoviesState.find(i => i.movieId === movie.id)) {
-          handleAddSavedMovie(movie);
+          return handleAddSavedMovie(movie);
         }
         if (!!savedMoviesState.find(i => i.movieId === movie.id)) {
           const savedMovie = savedMoviesState.find(
             i => i.movieId === movie.id
           );
-          handleDeleteMovie(savedMovie._id);
+          return handleDeleteMovie(savedMovie._id);
         }
       },
       [handleAddSavedMovie, handleDeleteMovie, savedMoviesState]

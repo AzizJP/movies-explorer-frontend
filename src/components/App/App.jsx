@@ -213,7 +213,7 @@ const App = memo(() => {
     movie => {
       MainApi.addToFavorite(movie)
         .then(newMovie => {
-          handleSavedMoviesChange([...savedMoviesState, newMovie]);
+          handleSavedMoviesChange([newMovie, ...savedMoviesState]);
         })
         .catch(err => {
           console.log(err);
