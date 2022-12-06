@@ -76,10 +76,12 @@ const SearchForm = memo(
       evt => {
         evt.preventDefault();
         if (!isValid['search']) {
+          handleLoadingChange(false);
           handleErrorMessageChange(errors['search']);
           return handleInfoTooltip();
         }
         if (path.pathname === '/movies') {
+          handleLoadingChange(true);
           MoviesApi.getContent()
             .then(res => {
               if (!res) {
@@ -88,11 +90,12 @@ const SearchForm = memo(
                 );
               }
               if (res) {
-                handleLoadingChange(true);
+                handleLoadingChange(false);
                 filterMovies(res);
               }
             })
             .catch(err => {
+              handleLoadingChange(false);
               handleErrorMessageChange('Что-то пошло не так!');
               handleInfoTooltip();
             })
