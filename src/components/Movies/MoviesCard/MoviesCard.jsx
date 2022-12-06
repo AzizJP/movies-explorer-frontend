@@ -15,6 +15,7 @@ const MoviesCard = memo(
     const { image, trailerLink, nameRU, duration, id } = film;
 
     useEffect(() => {
+      if (savedMoviesState.length === 0) setIsSaved(false);
       if (savedMoviesState.length > 0) {
         setIsSaved(!!savedMoviesState.find(i => i.movieId === id));
       }
