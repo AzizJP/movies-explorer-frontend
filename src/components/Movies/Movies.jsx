@@ -58,7 +58,6 @@ const Movies = memo(
 
     const toggleMovieLike = useCallback(
       movie => {
-        console.log(savedMoviesState);
         if (!savedMoviesState.find(i => i.movieId === movie.id)) {
           return handleAddSavedMovie(movie);
         }
