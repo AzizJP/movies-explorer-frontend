@@ -1,8 +1,8 @@
 .login {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   align-items: center;
-  min-height: 100vh;
   background-color: #fafafa;
 }
 
