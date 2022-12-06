@@ -10,7 +10,7 @@
   align-items: center;
   visibility: hidden;
   opacity: 0;
-  transition: all 0.5s linear;
+  transition: all 0.3s linear;
   z-index: 0;
 }
 
@@ -18,7 +18,7 @@
   z-index: 3;
   visibility: visible;
   opacity: 1;
-  transition: all 0.5s linear;
+  transition: all 0.3s linear;
 }
 
 .popup__info-tooltip {
@@ -69,7 +69,7 @@
   width: 20px;
   min-height: 20px;
   cursor: pointer;
-  transition: opacity 0.5s linear;
+  transition: opacity 0.3s linear;
   padding: 0;
   margin: 0;
 }

@@ -82,6 +82,9 @@ const App = memo(() => {
     setIsRegisterInfoTooltipOpen(false);
     setIsLoginInfoTooltipOpen(false);
     setInfoTooltipOpen(false);
+    setTimeout(() => {
+      setIsSuccess(false);
+    }, 300);
   }, []);
 
   const exitFromAccount = useCallback(() => {
@@ -97,7 +100,6 @@ const App = memo(() => {
         }
         if (res.data) {
           setIsSuccess(true);
-          setLoggedIn(true);
           resetErrorMessage();
         }
         if (res.message) {
@@ -112,9 +114,7 @@ const App = memo(() => {
         handleRegisterClick();
         handleErrorMessageChange(
           err.message || 'Что-то пошло не так!'
-        ).finally(() => {
-          setIsSuccess(false);
-        });
+        );
       });
   };
 
@@ -191,7 +191,7 @@ const App = memo(() => {
     loggedIn &&
       MainApi.getMovies()
         .then(res => {
-          if (!res || res.status === 400) {
+          if (!res || res.message) {
             throw new Error('Что-то пошло не так!');
           }
           if (res) {
