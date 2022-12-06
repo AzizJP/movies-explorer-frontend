@@ -76,7 +76,10 @@ const SearchForm = memo(
       evt => {
         evt.preventDefault();
         if (!isValid['search']) {
-          handleLoadingChange(false);
+          console.log('123');
+          if (path.pathname === '/movies') {
+            handleLoadingChange(false);
+          }
           handleErrorMessageChange(errors['search']);
           return handleInfoTooltip();
         }

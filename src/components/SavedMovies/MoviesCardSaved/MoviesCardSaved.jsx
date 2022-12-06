@@ -1,11 +1,13 @@
-import { useCallback } from 'react';
-import { memo } from 'react';
+import { memo, useCallback, useContext } from 'react';
+import { CurrentUserContext } from '../../../contexts/CurrentUserContext';
 
 import { ReactComponent as DeleteIcon } from '../../../images/delete.svg';
 
 /*styles in Movies/MoviesCard*/
 const MoviesCardSaved = memo(({ film, handleDeleteMovie }) => {
-  const { image, nameRU, duration, _id, trailerLink } = film;
+  const currentUser = useContext(CurrentUserContext);
+  const { image, nameRU, duration, _id, trailerLink, owner } = film;
+  const isItMyFilm = owner === currentUser._id;
 
   const onDeleteMovie = useCallback(() => {
     handleDeleteMovie(_id);
@@ -31,13 +33,15 @@ const MoviesCardSaved = memo(({ film, handleDeleteMovie }) => {
           <p className="movies-card__duration">{duration}</p>
         </div>
         <div className="movies-card__icon-wrapper">
-          <button
-            type="button"
-            className="movies-card__icon"
-            onClick={onDeleteMovie}
-          >
-            <DeleteIcon />
-          </button>
+          {isItMyFilm ? (
+            <button
+              type="button"
+              className="movies-card__icon"
+              onClick={onDeleteMovie}
+            >
+              <DeleteIcon />
+            </button>
+          ) : null}
         </div>
       </div>
     </article>

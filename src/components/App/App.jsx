@@ -31,6 +31,7 @@ const App = memo(() => {
   const [currentUser, setCurrentUser] = useState({
     name: '',
     email: '',
+    id: '',
   });
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [loggedIn, setLoggedIn] = useState(isTokenValid);
@@ -149,7 +150,11 @@ const App = memo(() => {
           throw new Error();
         }
         if (res) {
-          setCurrentUser({ name: res.name, email: res.email });
+          setCurrentUser({
+            name: res.name,
+            email: res.email,
+            id: res._id,
+          });
           resetErrorMessage();
         }
       })
@@ -170,7 +175,8 @@ const App = memo(() => {
       MainApi.getContent(token).then(res => {
         if (res) {
           setLoggedIn(true);
-          setCurrentUser({ name: res.name, email: res.email });
+          console.log(res);
+          setCurrentUser(res);
         }
         if (res.message) {
           exitFromAccount();
