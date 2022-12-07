@@ -7,8 +7,6 @@ const SearchFormInput = memo(({ value, onChange }) => {
     <div className="search__input-wrapper">
       <input
         type="text"
-        minLength={2}
-        maxLength={30}
         required
         className="search__input"
         placeholder="Фильм"

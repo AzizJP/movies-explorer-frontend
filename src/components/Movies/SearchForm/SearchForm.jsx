@@ -6,7 +6,6 @@ import ToggleCheckbox from '../../Shared/ToggleCheckbox/ToggleCheckbox';
 
 import './SearchForm.css';
 import { useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
 
 const SearchForm = memo(
   ({
@@ -18,23 +17,24 @@ const SearchForm = memo(
     handleErrorMessageChange,
   }) => {
     const path = useLocation();
-    const [isToggled, setIsToggled] = useState(false);
+    const searchOptions = JSON.parse(
+      localStorage.getItem('search-options')
+    );
+    const [isToggled, setIsToggled] = useState(
+      searchOptions.isShortFilm || false
+    );
     const { values, handleChange, errors, isValid } =
       useFormWithValidation(
         {
-          'search': '',
+          'search': searchOptions.text,
         },
         {
           'search': 'Нужно ввести ключевое слово',
         },
         {
-          'search': false,
+          'search': searchOptions.text,
         }
       );
-
-    useEffect(() => {
-      handleNotFoundMoviesChange(false);
-    }, [handleNotFoundMoviesChange, values]);
 
     const filterMovies = useCallback(
       movies => {
@@ -42,6 +42,9 @@ const SearchForm = memo(
           const sameSearchName = item.nameRU
             .toLowerCase()
             .includes(values['search'].toLowerCase());
+          if (!sameSearchName) {
+            return acc;
+          }
           if (isToggled) {
             const shortMovie = item.duration < 40;
             if (sameSearchName && shortMovie) {
@@ -55,6 +58,7 @@ const SearchForm = memo(
           return acc;
         }, []);
         if (newMovies.length === 0) {
+          handleFoundMoviesChange(newMovies);
           return handleNotFoundMoviesChange(true);
         }
         handleNotFoundMoviesChange(false);
@@ -76,7 +80,6 @@ const SearchForm = memo(
       evt => {
         evt.preventDefault();
         if (!isValid['search']) {
-          console.log('123');
           if (path.pathname === '/movies') {
             handleLoadingChange(false);
           }
@@ -84,6 +87,13 @@ const SearchForm = memo(
           return handleInfoTooltip();
         }
         if (path.pathname === '/movies') {
+          localStorage.setItem(
+            'search-options',
+            JSON.stringify({
+              text: values['search'],
+              isShortFilm: isToggled,
+            })
+          );
           handleLoadingChange(true);
           MoviesApi.getContent()
             .then(res => {
@@ -117,6 +127,8 @@ const SearchForm = memo(
         errors,
         handleInfoTooltip,
         handleLoadingChange,
+        values,
+        isToggled,
         filterMovies,
         foundMovies,
       ]

@@ -18,7 +18,9 @@ const Movies = memo(
     const [foundMovies, setFoundMovies] = useState(
       JSON.parse(localStorage.getItem('movies')) || []
     );
-    const [notFoundMovies, setNotFoundMovies] = useState(false);
+    const [notFoundMovies, setNotFoundMovies] = useState(
+      JSON.parse(localStorage.getItem('is-not-found')) || false
+    );
     const [maxAmount, setMaxAmount] = useState(0);
     const showMovies = foundMovies.slice(0, maxAmount);
     const windowInnerWidth = window.innerWidth;
@@ -36,10 +38,12 @@ const Movies = memo(
       if (isDesktop) {
         setMaxAmount(12);
       }
-      if (foundMovies.length > 0) {
-        localStorage.setItem('movies', JSON.stringify(foundMovies));
-      }
-    }, [foundMovies, isDesktop, isLaptop, isPhone]);
+      localStorage.setItem('movies', JSON.stringify(foundMovies));
+      localStorage.setItem(
+        'is-not-found',
+        JSON.stringify(notFoundMovies)
+      );
+    }, [foundMovies, isDesktop, isLaptop, isPhone, notFoundMovies]);
 
     const handleLoadingChange = useCallback(loading => {
       setIsLoading(loading);

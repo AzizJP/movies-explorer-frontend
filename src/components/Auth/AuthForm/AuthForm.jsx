@@ -65,7 +65,7 @@ const AuthForm = memo(
               errorText={passwordValidationErrorMessage}
               value={passwordValue}
               onChange={handleChange}
-              type="text"
+              type="password"
             />
           </div>
           {children}
