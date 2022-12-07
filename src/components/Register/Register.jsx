@@ -8,7 +8,12 @@ import AuthHeader from '../Auth/AuthHeader/AuthHeader';
 import './Register.css';
 
 const Register = memo(
-  ({ onRegister, message, clearErrorMessage }) => {
+  ({
+    onRegister,
+    message,
+    clearErrorMessage,
+    isRequestingServer,
+  }) => {
     const {
       values,
       handleChange,
@@ -76,7 +81,8 @@ const Register = memo(
             isValid={
               isValid['name'] &&
               isValid['email'] &&
-              isValid['password']
+              isValid['password'] &&
+              !isRequestingServer
             }
             message={message}
             clearErrorMessage={clearErrorMessage}

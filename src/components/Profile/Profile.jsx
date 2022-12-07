@@ -6,7 +6,12 @@ import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 import './Profile.css';
 
 const Profile = memo(
-  ({ profileInfo, exitFromAccount, updateProfileInfo }) => {
+  ({
+    profileInfo,
+    exitFromAccount,
+    updateProfileInfo,
+    isRequestingServer,
+  }) => {
     const [canEdit, setCanEdit] = useState(false);
     const { values, setValues, handleChange, errors, isValid } =
       useFormWithValidation(
@@ -78,11 +83,16 @@ const Profile = memo(
         ) {
           return true;
         }
-        return !(isValid['name'] && isValid['email']);
+        return !(
+          isValid['name'] &&
+          isValid['email'] &&
+          !isRequestingServer
+        );
       }
       return false;
     }, [
       editButtonText,
+      isRequestingServer,
       isValid,
       profileInfo.email,
       profileInfo.name,

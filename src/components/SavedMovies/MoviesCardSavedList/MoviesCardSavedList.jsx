@@ -3,7 +3,7 @@ import MoviesCardSaved from '../MoviesCardSaved/MoviesCardSaved';
 
 /*styles in Movies/MoviesCardList*/
 const MoviesCardSavedList = memo(
-  ({ savedMoviesState, handleDeleteMovie }) => {
+  ({ savedMoviesState, handleDeleteMovie, isRequestingServer }) => {
     return (
       <section className="movies-list">
         {savedMoviesState.map(film => (
@@ -11,6 +11,7 @@ const MoviesCardSavedList = memo(
             key={film._id}
             film={film}
             handleDeleteMovie={handleDeleteMovie}
+            isRequestingServer={isRequestingServer}
           />
         ))}
       </section>

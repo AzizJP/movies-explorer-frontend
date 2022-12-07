@@ -60,7 +60,7 @@
 
 @media screen and (min-width: 768px) {
   .footer {
-    padding: 0 1.875rem 1.25rem;
+    padding: 4.9375rem 1.875rem 1.25rem;
     gap: 2.5625rem;
   }
   .footer__author {
@@ -75,6 +75,6 @@
 
 @media screen and (min-width: 1280px) {
   .footer {
-    padding: 0 4.375rem 1.25rem;
+    padding: 4.9375rem 4.375rem 1.25rem;
   }
 }

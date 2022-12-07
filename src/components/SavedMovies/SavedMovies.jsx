@@ -9,9 +9,11 @@ import './SavedMovies.css';
 const SavedMovies = memo(
   ({
     initialMoviesState,
+    handleInitialMoviesChange,
     handleDeleteMovie,
     handleInfoTooltip,
     handleErrorMessageChange,
+    isRequestingServer,
   }) => {
     const [notFoundSavedMovies, setNotFoundSavedMovies] =
       useState(false);
@@ -62,11 +64,14 @@ const SavedMovies = memo(
       <section className="saved-movies">
         <SearchForm
           handleNotFoundMoviesChange={handleNotFoundSavedMoviesChange}
-          foundMovies={savedMovies}
-          handleFoundMoviesChange={handleSavedMoviesChange}
+          foundMovies={initialMoviesState}
+          displayedMovies={savedMovies}
+          handleDisplayedMoviesChange={handleSavedMoviesChange}
+          handleFoundMoviesChange={handleInitialMoviesChange}
           handleInfoTooltip={handleInfoTooltip}
           handleErrorMessageChange={handleErrorMessageChange}
           searchOptions={searchOptions}
+          isRequestingServer={isRequestingServer}
           value={values['saved-movies-search']}
           isValid={isValid['saved-movies-search']}
           error={errors['saved-movies-search']}
@@ -79,6 +84,7 @@ const SavedMovies = memo(
         <MoviesCardSavedList
           savedMoviesState={savedMovies}
           handleDeleteMovie={handleDeleteMovie}
+          isRequestingServer={isRequestingServer}
         />
       </section>
     );

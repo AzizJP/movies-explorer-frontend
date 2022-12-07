@@ -11,6 +11,16 @@ import MoreButton from './MoreButton/MoreButton';
 import Preloader from './Preloader/Preloader';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
+import {
+  CARDS_INCREMENT_AT_DESKTOP,
+  CARDS_INCREMENT_AT_PHONE,
+  DESKTOP_BREAKPOINT,
+  LAPTOP_BREAKPOINT,
+  PHONE_BREAKPOINT,
+  VISIBLE_CARDS_AT_DESKTOP,
+  VISIBLE_CARDS_AT_LAPTOP,
+  VISIBLE_CARDS_AT_PHONE,
+} from '../../utils/constants';
 
 import './Movies.css';
 
@@ -21,21 +31,22 @@ const Movies = memo(
     handleAddSavedMovie,
     handleInfoTooltip,
     handleErrorMessageChange,
+    isRequestingServer,
   }) => {
     const currentUser = useContext(CurrentUserContext);
     const [isLoading, setIsLoading] = useState(false);
     const [foundMovies, setFoundMovies] = useState(
+      JSON.parse(localStorage.getItem('found-movies')) || []
+    );
+    const [displayedMovies, setDisplayedMovies] = useState(
       JSON.parse(localStorage.getItem('movies')) || []
     );
     const [notFoundMovies, setNotFoundMovies] = useState(
       JSON.parse(localStorage.getItem('is-not-found')) || false
     );
     const [maxAmount, setMaxAmount] = useState(0);
-    const showMovies = foundMovies.slice(0, maxAmount);
+    const showMovies = displayedMovies.slice(0, maxAmount);
     const windowInnerWidth = window.innerWidth;
-    const isPhone = windowInnerWidth >= 320;
-    const isLaptop = windowInnerWidth >= 634;
-    const isDesktop = windowInnerWidth >= 1137;
 
     const searchOptions = JSON.parse(
       localStorage.getItem('search-options')
@@ -62,21 +73,30 @@ const Movies = memo(
       );
 
     useEffect(() => {
-      if (isPhone) {
-        setMaxAmount(5);
+      if (windowInnerWidth >= PHONE_BREAKPOINT) {
+        setMaxAmount(VISIBLE_CARDS_AT_PHONE);
       }
-      if (isLaptop) {
-        setMaxAmount(8);
+      if (windowInnerWidth >= LAPTOP_BREAKPOINT) {
+        setMaxAmount(VISIBLE_CARDS_AT_LAPTOP);
       }
-      if (isDesktop) {
-        setMaxAmount(12);
+      if (windowInnerWidth >= DESKTOP_BREAKPOINT) {
+        setMaxAmount(VISIBLE_CARDS_AT_DESKTOP);
       }
-      localStorage.setItem('movies', JSON.stringify(foundMovies));
+      localStorage.setItem('movies', JSON.stringify(displayedMovies));
+      localStorage.setItem(
+        'found-movies',
+        JSON.stringify(foundMovies)
+      );
       localStorage.setItem(
         'is-not-found',
         JSON.stringify(notFoundMovies)
       );
-    }, [foundMovies, isDesktop, isLaptop, isPhone, notFoundMovies]);
+    }, [
+      displayedMovies,
+      foundMovies,
+      notFoundMovies,
+      windowInnerWidth,
+    ]);
 
     const handleLoadingChange = useCallback(loading => {
       setIsLoading(loading);
@@ -87,11 +107,16 @@ const Movies = memo(
     const handleFoundMoviesChange = useCallback(movies => {
       setFoundMovies(movies);
     }, []);
+    const handleDisplayedMoviesChange = useCallback(movies => {
+      setDisplayedMovies(movies);
+    }, []);
 
     const showMoreCards = useCallback(() => {
-      if (isPhone) setMaxAmount(prev => prev + 2);
-      if (isDesktop) setMaxAmount(prev => prev + 1);
-    }, [isDesktop, isPhone]);
+      if (windowInnerWidth >= PHONE_BREAKPOINT)
+        setMaxAmount(prev => prev + CARDS_INCREMENT_AT_PHONE);
+      if (windowInnerWidth >= DESKTOP_BREAKPOINT)
+        setMaxAmount(prev => prev + CARDS_INCREMENT_AT_DESKTOP);
+    }, [windowInnerWidth]);
 
     const toggleMovieLike = useCallback(
       movie => {
@@ -128,10 +153,14 @@ const Movies = memo(
           handleLoadingChange={handleLoadingChange}
           handleNotFoundMoviesChange={handleNotFoundMoviesChange}
           foundMovies={foundMovies}
+          displayedMovies={displayedMovies}
           handleFoundMoviesChange={handleFoundMoviesChange}
+          handleDisplayedMoviesChange={handleDisplayedMoviesChange}
           handleInfoTooltip={handleInfoTooltip}
           handleErrorMessageChange={handleErrorMessageChange}
           searchOptions={searchOptions}
+          isRequestingServer={isRequestingServer}
+          isLoading={isLoading}
           value={values['search']}
           isValid={isValid['search']}
           error={errors['search']}
@@ -147,8 +176,8 @@ const Movies = memo(
           toggleMovieLike={toggleMovieLike}
           savedMoviesState={savedMoviesState}
         />
-        {foundMovies.length === 0 ||
-        maxAmount >= foundMovies.length ? null : (
+        {displayedMovies.length === 0 ||
+        maxAmount >= displayedMovies.length ? null : (
           <MoreButton
             isLoading={isLoading}
             showMoreCards={showMoreCards}

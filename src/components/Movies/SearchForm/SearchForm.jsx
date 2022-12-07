@@ -2,16 +2,20 @@ import { memo, useCallback, useState } from 'react';
 import * as MoviesApi from '../../../utils/MoviesApi';
 import SearchFormInput from '../../Shared/SearchFormInput/SearchFormInput';
 import ToggleCheckbox from '../../Shared/ToggleCheckbox/ToggleCheckbox';
+import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { SHORT_FILM_DURATION } from '../../../utils/constants';
 
 import './SearchForm.css';
-import { useLocation } from 'react-router-dom';
 
 const SearchForm = memo(
   ({
     handleLoadingChange,
     handleNotFoundMoviesChange,
     foundMovies,
+    displayedMovies,
     handleFoundMoviesChange,
+    handleDisplayedMoviesChange,
     handleInfoTooltip,
     handleErrorMessageChange,
     value,
@@ -20,6 +24,8 @@ const SearchForm = memo(
     handleChange,
     searchOptions,
     inputName,
+    isRequestingServer,
+    isLoading,
   }) => {
     const path = useLocation();
 
@@ -34,17 +40,32 @@ const SearchForm = memo(
       getInitialToggleState()
     );
 
+    const displayShortMovies = useCallback(
+      movies => {
+        const newMovies = movies.reduce((acc, item) => {
+          const shortMovie = item.duration < SHORT_FILM_DURATION;
+          if (shortMovie) {
+            return [...acc, item];
+          }
+          return acc;
+        }, []);
+        handleDisplayedMoviesChange(newMovies);
+      },
+      [handleDisplayedMoviesChange]
+    );
+
     const filterMovies = useCallback(
       movies => {
         const newMovies = movies.reduce((acc, item) => {
           const sameSearchName = item.nameRU
             .toLowerCase()
-            .includes(value.toLowerCase());
+            .trim()
+            .includes(value.toLowerCase().trim());
           if (!sameSearchName) {
             return acc;
           }
           if (isToggled) {
-            const shortMovie = item.duration < 40;
+            const shortMovie = item.duration < SHORT_FILM_DURATION;
             if (sameSearchName && shortMovie) {
               return [...acc, item];
             }
@@ -56,23 +77,46 @@ const SearchForm = memo(
           return acc;
         }, []);
         if (newMovies.length === 0) {
-          handleFoundMoviesChange(newMovies);
+          handleDisplayedMoviesChange(newMovies);
           return handleNotFoundMoviesChange(true);
         }
         handleNotFoundMoviesChange(false);
         handleFoundMoviesChange(newMovies);
+        handleDisplayedMoviesChange(newMovies);
       },
       [
-        handleNotFoundMoviesChange,
+        handleDisplayedMoviesChange,
         handleFoundMoviesChange,
-        value,
+        handleNotFoundMoviesChange,
         isToggled,
+        value,
       ]
     );
 
     const handleToggleButtonClick = useCallback(() => {
       setIsToggled(!isToggled);
-    }, [isToggled]);
+      if (displayedMovies.length === 0) return;
+      if (!isToggled) return displayShortMovies(foundMovies);
+      if (isToggled) return handleDisplayedMoviesChange(foundMovies);
+    }, [
+      displayShortMovies,
+      displayedMovies,
+      foundMovies,
+      handleDisplayedMoviesChange,
+      isToggled,
+    ]);
+
+    useEffect(() => {
+      if (path.pathname === '/movies') {
+        localStorage.setItem(
+          'search-options',
+          JSON.stringify({
+            text: value,
+            isShortFilm: isToggled,
+          })
+        );
+      }
+    }, [isToggled, path.pathname, value]);
 
     const handleSubmit = useCallback(
       evt => {
@@ -85,13 +129,6 @@ const SearchForm = memo(
           return handleInfoTooltip();
         }
         if (path.pathname === '/movies') {
-          localStorage.setItem(
-            'search-options',
-            JSON.stringify({
-              text: value,
-              isShortFilm: isToggled,
-            })
-          );
           handleLoadingChange(true);
           MoviesApi.getContent()
             .then(res => {
@@ -119,16 +156,14 @@ const SearchForm = memo(
         }
       },
       [
-        isValid,
-        path.pathname,
-        handleErrorMessageChange,
         error,
-        handleInfoTooltip,
-        handleLoadingChange,
-        value,
-        isToggled,
         filterMovies,
         foundMovies,
+        handleErrorMessageChange,
+        handleInfoTooltip,
+        handleLoadingChange,
+        isValid,
+        path.pathname,
       ]
     );
 
@@ -143,6 +178,7 @@ const SearchForm = memo(
             value={value}
             onChange={handleChange}
             name={inputName}
+            isLoading={isLoading}
           />
           <div className="search__toggler-wrapper">
             <h4 className="search__toggler-title">Короткометражки</h4>

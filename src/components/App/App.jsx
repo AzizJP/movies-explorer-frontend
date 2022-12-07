@@ -1,5 +1,10 @@
 import { memo, useCallback, useEffect, useState } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  Switch,
+  useHistory,
+} from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
@@ -23,9 +28,9 @@ const App = memo(() => {
   const history = useHistory();
   const isTokenValid = useMemo(() => {
     const jwt = localStorage.getItem('token');
-    if (!jwt) return;
-    const kek = parseJwt(jwt);
-    return Date.now() / 1000 < kek.exp;
+    if (!jwt) return false;
+    const jwtInfo = parseJwt(jwt);
+    return Date.now() / 1000 < jwtInfo.exp;
   }, []);
 
   const [currentUser, setCurrentUser] = useState({
@@ -45,6 +50,7 @@ const App = memo(() => {
   const [profileInfoTooltipOpen, setProfileInfoTooltipOpen] =
     useState(false);
   const [savedMoviesState, setSavedMoviesState] = useState([]);
+  const [isRequestingServer, setIsRequestingServer] = useState(false);
 
   const handleMenuButtonClick = useCallback(() => {
     setIsOpenMenu(true);
@@ -112,6 +118,7 @@ const App = memo(() => {
   }, []);
 
   const handleRegister = ({ name, email, password }) => {
+    setIsRequestingServer(true);
     MainApi.register(name, email, password)
       .then(res => {
         if (!res || res.status === 400) {
@@ -134,10 +141,16 @@ const App = memo(() => {
         handleErrorMessageChange(
           err.message || 'Что-то пошло не так!'
         );
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setIsRequestingServer(false);
+        }, 300);
       });
   };
 
   const handleLogin = ({ email, password }) => {
+    setIsRequestingServer(true);
     MainApi.authorize(email, password)
       .then(res => {
         if (!res || res.message) {
@@ -158,14 +171,20 @@ const App = memo(() => {
         handleErrorMessageChange(
           err.message || 'Что-то пошло не так!'
         );
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setIsRequestingServer(false);
+        }, 300);
       });
   };
 
   const handleProfileUpdate = ({ name, email, token }) => {
+    setIsRequestingServer(true);
     MainApi.updateProfile(name, email, token)
       .then(res => {
         if (res.status === 400 || res.message) {
-          throw new Error();
+          throw new Error(res.message);
         }
         if (res) {
           setCurrentUser({
@@ -185,6 +204,11 @@ const App = memo(() => {
         handleErrorMessageChange(
           err.message || 'Что-то пошло не так!'
         );
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setIsRequestingServer(false);
+        }, 300);
       });
   };
 
@@ -201,10 +225,9 @@ const App = memo(() => {
         }
         if (res.message) {
           exitFromAccount();
-          history.push('/signin');
         }
       }),
-    [history, exitFromAccount]
+    [exitFromAccount]
   );
 
   useEffect(() => {
@@ -212,7 +235,10 @@ const App = memo(() => {
     if (jwt) {
       tokenCheck(jwt);
     }
-  }, [loggedIn, tokenCheck]);
+    if (!jwt) {
+      exitFromAccount();
+    }
+  }, [exitFromAccount, loggedIn, tokenCheck]);
 
   useEffect(() => {
     loggedIn &&
@@ -222,7 +248,7 @@ const App = memo(() => {
             throw new Error('Что-то пошло не так!');
           }
           if (res) {
-            handleSavedMoviesChange(res);
+            handleSavedMoviesChange(res.reverse());
           }
         })
         .catch(err => {
@@ -240,12 +266,18 @@ const App = memo(() => {
 
   const handleAddSavedMovie = useCallback(
     movie => {
+      setIsRequestingServer(true);
       MainApi.addToFavorite(movie)
         .then(newMovie => {
           handleSavedMoviesChange([newMovie, ...savedMoviesState]);
         })
         .catch(err => {
           console.log(err);
+        })
+        .finally(() => {
+          setTimeout(() => {
+            setIsRequestingServer(false);
+          }, 300);
         });
       return;
     },
@@ -254,6 +286,7 @@ const App = memo(() => {
 
   const handleDeleteMovie = useCallback(
     id => {
+      setIsRequestingServer(true);
       handleSavedMoviesChange(prev =>
         prev.filter(movie => movie._id !== id)
       );
@@ -263,6 +296,11 @@ const App = memo(() => {
         })
         .catch(err => {
           console.log(err);
+        })
+        .finally(() => {
+          setTimeout(() => {
+            setIsRequestingServer(false);
+          }, 300);
         });
       return;
     },
@@ -289,15 +327,18 @@ const App = memo(() => {
             handleAddSavedMovie={handleAddSavedMovie}
             handleInfoTooltip={handleInfoTooltip}
             handleErrorMessageChange={handleErrorMessageChange}
+            isRequestingServer={isRequestingServer}
           />
           <ProtectedRoute
             path="/saved-movies"
             loggedIn={loggedIn}
             component={SavedMovies}
             initialMoviesState={savedMoviesState}
+            handleInitialMoviesChange={handleSavedMoviesChange}
             handleDeleteMovie={handleDeleteMovie}
             handleInfoTooltip={handleInfoTooltip}
             handleErrorMessageChange={handleErrorMessageChange}
+            isRequestingServer={isRequestingServer}
           />
           <ProtectedRoute
             path="/profile"
@@ -306,19 +347,24 @@ const App = memo(() => {
             profileInfo={currentUser}
             exitFromAccount={exitFromAccount}
             updateProfileInfo={handleProfileUpdate}
+            isRequestingServer={isRequestingServer}
           />
           <Route path="/signup">
+            {loggedIn ? <Redirect to="/" /> : null}
             <Register
               onRegister={handleRegister}
               message={message}
               clearErrorMessage={resetErrorMessage}
+              isRequestingServer={isRequestingServer}
             />
           </Route>
           <Route path="/signin">
+            {loggedIn ? <Redirect to="/" /> : null}
             <Login
               onLogin={handleLogin}
               message={message}
               clearErrorMessage={resetErrorMessage}
+              isRequestingServer={isRequestingServer}
             />
           </Route>
           <Route path="*">

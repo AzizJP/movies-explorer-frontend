@@ -6,6 +6,7 @@ import {
   memo,
 } from 'react';
 import { CurrentUserContext } from '../../../contexts/CurrentUserContext';
+import { getTimeFromMinutes } from '../../../utils/helpers';
 
 import { ReactComponent as SaveIcon } from '../../../images/save.svg';
 import { ReactComponent as SavedIcon } from '../../../images/saved.svg';
@@ -51,7 +52,9 @@ const MoviesCard = memo(
         <div className="movies-card__about-wrapper">
           <div className="movies-card__about">
             <h2 className="movies-card__title">{nameRU}</h2>
-            <p className="movies-card__duration">{duration}</p>
+            <p className="movies-card__duration">
+              {getTimeFromMinutes(duration)}
+            </p>
           </div>
           <div className="movies-card__icon-wrapper">
             <button
