@@ -42,20 +42,9 @@ const App = memo(() => {
   const [isLoginInfoTooltipOpen, setIsLoginInfoTooltipOpen] =
     useState(false);
   const [infoTooltipOpen, setInfoTooltipOpen] = useState(false);
+  const [profileInfoTooltipOpen, setProfileInfoTooltipOpen] =
+    useState(false);
   const [savedMoviesState, setSavedMoviesState] = useState([]);
-
-  useEffect(() => {
-    const closeByEscape = evt => {
-      if (evt.key === 'Escape') {
-        setIsOpenMenu(false);
-      }
-    };
-    if (isOpenMenu) {
-      document.addEventListener('keydown', closeByEscape);
-    } else {
-      document.removeEventListener('keydown', closeByEscape);
-    }
-  }, [isOpenMenu]);
 
   const handleMenuButtonClick = useCallback(() => {
     setIsOpenMenu(true);
@@ -76,17 +65,46 @@ const App = memo(() => {
   const handleLoginClick = useCallback(() => {
     setIsLoginInfoTooltipOpen(true);
   }, []);
+  const handleUpdateProfileClick = useCallback(() => {
+    setProfileInfoTooltipOpen(true);
+  }, []);
   const handleInfoTooltip = useCallback(() => {
     setInfoTooltipOpen(true);
   }, []);
   const closeInfoTooltip = useCallback(() => {
     setIsRegisterInfoTooltipOpen(false);
     setIsLoginInfoTooltipOpen(false);
+    setProfileInfoTooltipOpen(false);
     setInfoTooltipOpen(false);
     setTimeout(() => {
       setIsSuccess(false);
     }, 300);
   }, []);
+
+  const isOpen =
+    isOpenMenu ||
+    isRegisterInfoTooltipOpen ||
+    isLoginInfoTooltipOpen ||
+    profileInfoTooltipOpen ||
+    infoTooltipOpen;
+
+  const closeAllPopups = useCallback(() => {
+    setIsOpenMenu(false);
+    closeInfoTooltip();
+  }, [closeInfoTooltip]);
+
+  useEffect(() => {
+    const closeByEscape = evt => {
+      if (evt.key === 'Escape') {
+        closeAllPopups();
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('keydown', closeByEscape);
+    } else {
+      document.removeEventListener('keydown', closeByEscape);
+    }
+  }, [closeAllPopups, isOpen]);
 
   const exitFromAccount = useCallback(() => {
     setLoggedIn(false);
@@ -155,8 +173,12 @@ const App = memo(() => {
             email: res.email,
             id: res._id,
           });
+          setIsSuccess(true);
           resetErrorMessage();
         }
+      })
+      .then(() => {
+        handleUpdateProfileClick();
       })
       .catch(err => {
         handleInfoTooltip();
@@ -175,7 +197,6 @@ const App = memo(() => {
       MainApi.getContent(token).then(res => {
         if (res) {
           setLoggedIn(true);
-          console.log(res);
           setCurrentUser(res);
         }
         if (res.message) {
@@ -273,9 +294,8 @@ const App = memo(() => {
             path="/saved-movies"
             loggedIn={loggedIn}
             component={SavedMovies}
-            savedMoviesState={savedMoviesState}
+            initialMoviesState={savedMoviesState}
             handleDeleteMovie={handleDeleteMovie}
-            handleSavedMoviesChange={handleSavedMoviesChange}
             handleInfoTooltip={handleInfoTooltip}
             handleErrorMessageChange={handleErrorMessageChange}
           />
@@ -327,6 +347,13 @@ const App = memo(() => {
           isSuccess={isSuccess}
           isOpen={infoTooltipOpen}
           onClose={closeInfoTooltip}
+          errorText={message}
+        />
+        <InfoTooltip
+          isSuccess={isSuccess}
+          isOpen={profileInfoTooltipOpen}
+          onClose={closeInfoTooltip}
+          successText="Данные успешно изменены"
           errorText={message}
         />
       </div>

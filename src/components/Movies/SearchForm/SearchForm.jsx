@@ -1,6 +1,5 @@
 import { memo, useCallback, useState } from 'react';
 import * as MoviesApi from '../../../utils/MoviesApi';
-import { useFormWithValidation } from '../../../hooks/useFormWithValidation';
 import SearchFormInput from '../../Shared/SearchFormInput/SearchFormInput';
 import ToggleCheckbox from '../../Shared/ToggleCheckbox/ToggleCheckbox';
 
@@ -15,33 +14,32 @@ const SearchForm = memo(
     handleFoundMoviesChange,
     handleInfoTooltip,
     handleErrorMessageChange,
+    value,
+    isValid,
+    error,
+    handleChange,
+    searchOptions,
+    inputName,
   }) => {
     const path = useLocation();
-    const searchOptions = JSON.parse(
-      localStorage.getItem('search-options')
-    );
+
+    const getInitialToggleState = useCallback(() => {
+      if (searchOptions) {
+        return searchOptions.isShortFilm;
+      }
+      return false;
+    }, [searchOptions]);
+
     const [isToggled, setIsToggled] = useState(
-      searchOptions.isShortFilm || false
+      getInitialToggleState()
     );
-    const { values, handleChange, errors, isValid } =
-      useFormWithValidation(
-        {
-          'search': searchOptions.text,
-        },
-        {
-          'search': 'Нужно ввести ключевое слово',
-        },
-        {
-          'search': searchOptions.text,
-        }
-      );
 
     const filterMovies = useCallback(
       movies => {
         const newMovies = movies.reduce((acc, item) => {
           const sameSearchName = item.nameRU
             .toLowerCase()
-            .includes(values['search'].toLowerCase());
+            .includes(value.toLowerCase());
           if (!sameSearchName) {
             return acc;
           }
@@ -67,7 +65,7 @@ const SearchForm = memo(
       [
         handleNotFoundMoviesChange,
         handleFoundMoviesChange,
-        values,
+        value,
         isToggled,
       ]
     );
@@ -79,18 +77,18 @@ const SearchForm = memo(
     const handleSubmit = useCallback(
       evt => {
         evt.preventDefault();
-        if (!isValid['search']) {
+        if (!isValid) {
           if (path.pathname === '/movies') {
             handleLoadingChange(false);
           }
-          handleErrorMessageChange(errors['search']);
+          handleErrorMessageChange(error);
           return handleInfoTooltip();
         }
         if (path.pathname === '/movies') {
           localStorage.setItem(
             'search-options',
             JSON.stringify({
-              text: values['search'],
+              text: value,
               isShortFilm: isToggled,
             })
           );
@@ -124,10 +122,10 @@ const SearchForm = memo(
         isValid,
         path.pathname,
         handleErrorMessageChange,
-        errors,
+        error,
         handleInfoTooltip,
         handleLoadingChange,
-        values,
+        value,
         isToggled,
         filterMovies,
         foundMovies,
@@ -142,8 +140,9 @@ const SearchForm = memo(
           className="search__form"
         >
           <SearchFormInput
-            value={values['search']}
+            value={value}
             onChange={handleChange}
+            name={inputName}
           />
           <div className="search__toggler-wrapper">
             <h4 className="search__toggler-title">Короткометражки</h4>

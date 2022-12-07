@@ -1,8 +1,16 @@
-import { memo, useCallback, useState, useEffect } from 'react';
+import {
+  memo,
+  useCallback,
+  useState,
+  useEffect,
+  useContext,
+} from 'react';
 import SearchForm from './SearchForm/SearchForm';
 import MoviesCardList from './MoviesCardList/MoviesCardList';
 import MoreButton from './MoreButton/MoreButton';
 import Preloader from './Preloader/Preloader';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 
 import './Movies.css';
 
@@ -14,6 +22,7 @@ const Movies = memo(
     handleInfoTooltip,
     handleErrorMessageChange,
   }) => {
+    const currentUser = useContext(CurrentUserContext);
     const [isLoading, setIsLoading] = useState(false);
     const [foundMovies, setFoundMovies] = useState(
       JSON.parse(localStorage.getItem('movies')) || []
@@ -27,6 +36,30 @@ const Movies = memo(
     const isPhone = windowInnerWidth >= 320;
     const isLaptop = windowInnerWidth >= 634;
     const isDesktop = windowInnerWidth >= 1137;
+
+    const searchOptions = JSON.parse(
+      localStorage.getItem('search-options')
+    );
+
+    const getInitialSearchText = useCallback(() => {
+      if (searchOptions) {
+        return searchOptions.text;
+      }
+      return '';
+    }, [searchOptions]);
+
+    const { values, handleChange, errors, isValid } =
+      useFormWithValidation(
+        {
+          'search': getInitialSearchText(),
+        },
+        {
+          'search': 'Нужно ввести ключевое слово',
+        },
+        {
+          'search': getInitialSearchText(),
+        }
+      );
 
     useEffect(() => {
       if (isPhone) {
@@ -62,17 +95,31 @@ const Movies = memo(
 
     const toggleMovieLike = useCallback(
       movie => {
-        if (!savedMoviesState.find(i => i.movieId === movie.id)) {
+        const savedMovie = savedMoviesState.find(
+          i => i.movieId === movie.id
+        );
+        if (
+          !savedMovie ||
+          !!savedMoviesState.find(
+            i => i.movieId === movie.id && i.owner !== currentUser._id
+          )
+        ) {
           return handleAddSavedMovie(movie);
         }
-        if (!!savedMoviesState.find(i => i.movieId === movie.id)) {
-          const savedMovie = savedMoviesState.find(
-            i => i.movieId === movie.id
-          );
+        if (
+          !!savedMoviesState.find(
+            i => i.movieId === movie.id && i.owner === currentUser._id
+          )
+        ) {
           return handleDeleteMovie(savedMovie._id);
         }
       },
-      [handleAddSavedMovie, handleDeleteMovie, savedMoviesState]
+      [
+        currentUser._id,
+        handleAddSavedMovie,
+        handleDeleteMovie,
+        savedMoviesState,
+      ]
     );
 
     return (
@@ -84,6 +131,12 @@ const Movies = memo(
           handleFoundMoviesChange={handleFoundMoviesChange}
           handleInfoTooltip={handleInfoTooltip}
           handleErrorMessageChange={handleErrorMessageChange}
+          searchOptions={searchOptions}
+          value={values['search']}
+          isValid={isValid['search']}
+          error={errors['search']}
+          handleChange={handleChange}
+          inputName="search"
         />
         {isLoading ? <Preloader /> : null}
         {notFoundMovies ? (

@@ -7,6 +7,7 @@ import './Profile.css';
 
 const Profile = memo(
   ({ profileInfo, exitFromAccount, updateProfileInfo }) => {
+    const [canEdit, setCanEdit] = useState(false);
     const { values, setValues, handleChange, errors, isValid } =
       useFormWithValidation(
         {
@@ -38,9 +39,7 @@ const Profile = memo(
           'email': true,
         }
       );
-    }, [profileInfo, setValues]);
-
-    const [canEdit, setCanEdit] = useState(false);
+    }, [profileInfo, setValues, canEdit]);
 
     const toggleProfileEdit = useCallback(() => {
       let token = localStorage.getItem('token');
@@ -67,12 +66,28 @@ const Profile = memo(
       return 'Редактировать';
     }, [canEdit]);
 
+    const cancelButton = useCallback(() => {
+      setCanEdit(false);
+    }, []);
+
     const disableButton = useCallback(() => {
       if (editButtonText === 'Принять') {
+        if (
+          profileInfo.name === values['name'] &&
+          profileInfo.email === values['email']
+        ) {
+          return true;
+        }
         return !(isValid['name'] && isValid['email']);
       }
       return false;
-    }, [editButtonText, isValid]);
+    }, [
+      editButtonText,
+      isValid,
+      profileInfo.email,
+      profileInfo.name,
+      values,
+    ]);
     return (
       <section className="profile">
         <div className="profile__info">
@@ -109,14 +124,25 @@ const Profile = memo(
           <span className="input__error-text">{errors['email']}</span>
         </div>
         <div className="profile__edit-section">
-          <button
-            type="button"
-            className="profile__edit"
-            onClick={toggleProfileEdit}
-            disabled={disableButton()}
-          >
-            {editButtonText}
-          </button>
+          <div className="profile__edit-buttons">
+            <button
+              type="button"
+              className="profile__edit"
+              onClick={toggleProfileEdit}
+              disabled={disableButton()}
+            >
+              {editButtonText}
+            </button>
+            {canEdit ? (
+              <button
+                type="button"
+                className="profile__edit"
+                onClick={cancelButton}
+              >
+                Отмена
+              </button>
+            ) : null}
+          </div>
           <Link
             to="/"
             className="profile__exit"

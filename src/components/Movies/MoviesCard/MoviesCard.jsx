@@ -1,6 +1,11 @@
-import { useEffect, useState } from 'react';
-import { useCallback } from 'react';
-import { memo } from 'react';
+import {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  memo,
+} from 'react';
+import { CurrentUserContext } from '../../../contexts/CurrentUserContext';
 
 import { ReactComponent as SaveIcon } from '../../../images/save.svg';
 import { ReactComponent as SavedIcon } from '../../../images/saved.svg';
@@ -13,13 +18,18 @@ const MoviesCard = memo(
   ({ toggleMovieLike, film, savedMoviesState }) => {
     const [isSaved, setIsSaved] = useState(false);
     const { image, trailerLink, nameRU, duration, id } = film;
+    const currentUser = useContext(CurrentUserContext);
 
     useEffect(() => {
       if (savedMoviesState.length === 0) setIsSaved(false);
       if (savedMoviesState.length > 0) {
-        setIsSaved(!!savedMoviesState.find(i => i.movieId === id));
+        setIsSaved(
+          !!savedMoviesState.find(
+            i => i.movieId === id && i.owner === currentUser._id
+          )
+        );
       }
-    }, [id, savedMoviesState]);
+    }, [currentUser._id, id, savedMoviesState]);
 
     const onCardLike = useCallback(() => {
       toggleMovieLike(film);

@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import './SearchFormInput.css';
 
-const SearchFormInput = memo(({ value, onChange }) => {
+const SearchFormInput = memo(({ value, onChange, name }) => {
   return (
     <div className="search__input-wrapper">
       <input
@@ -12,7 +12,7 @@ const SearchFormInput = memo(({ value, onChange }) => {
         placeholder="Фильм"
         value={value}
         onChange={onChange}
-        name="search"
+        name={name}
       />
       <button type="submit" className="search__button button-hover">
         Найти

@@ -8,7 +8,7 @@ const MoviesCardSavedList = memo(
       <section className="movies-list">
         {savedMoviesState.map(film => (
           <MoviesCardSaved
-            key={film.movieId}
+            key={film._id}
             film={film}
             handleDeleteMovie={handleDeleteMovie}
           />
