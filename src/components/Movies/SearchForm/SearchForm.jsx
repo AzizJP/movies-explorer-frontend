@@ -24,7 +24,6 @@ const SearchForm = memo(
     handleChange,
     searchOptions,
     inputName,
-    isRequestingServer,
     isLoading,
   }) => {
     const path = useLocation();
