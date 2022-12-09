@@ -1,4 +1,10 @@
-import { memo, useCallback, useEffect, useState } from 'react';
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+} from 'react';
 import {
   Redirect,
   Route,
@@ -19,18 +25,15 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import InfoTooltip from '../Shared/InfoTooltip/InfoTooltip';
 import ProtectedRoute from '../Shared/ProtectedRoute/ProtectedRoute';
 import * as MainApi from '../../utils/MainApi';
-import { parseJwt } from '../../utils/helpers';
 
 import './App.css';
-import { useMemo } from 'react';
 
 const App = memo(() => {
   const history = useHistory();
   const isTokenValid = useMemo(() => {
     const jwt = localStorage.getItem('token');
     if (!jwt) return false;
-    const jwtInfo = parseJwt(jwt);
-    return Date.now() / 1000 < jwtInfo.exp;
+    return true;
   }, []);
 
   const [currentUser, setCurrentUser] = useState({
@@ -64,6 +67,9 @@ const App = memo(() => {
   const handleSavedMoviesChange = useCallback(newMovies => {
     setSavedMoviesState(newMovies);
   }, []);
+  const handleRequestingServerChange = useCallback(isLoading => {
+    setIsRequestingServer(isLoading);
+  }, []);
 
   const handleRegisterClick = useCallback(() => {
     setIsRegisterInfoTooltipOpen(true);
@@ -78,6 +84,7 @@ const App = memo(() => {
     setInfoTooltipOpen(true);
   }, []);
   const closeInfoTooltip = useCallback(() => {
+    setMessage('');
     setIsRegisterInfoTooltipOpen(false);
     setIsLoginInfoTooltipOpen(false);
     setProfileInfoTooltipOpen(false);
@@ -117,7 +124,7 @@ const App = memo(() => {
     localStorage.clear();
   }, []);
 
-  const handleRegister = ({ name, email, password }) => {
+  const handleRegister = ({ name, email, password }, clearForm) => {
     setIsRequestingServer(true);
     MainApi.register(name, email, password)
       .then(res => {
@@ -133,7 +140,8 @@ const App = memo(() => {
         }
       })
       .then(() => {
-        handleLogin({ email, password });
+        handleLogin({ email, password }, clearForm);
+        clearForm();
         handleRegisterClick();
       })
       .catch(err => {
@@ -141,15 +149,13 @@ const App = memo(() => {
         handleErrorMessageChange(
           err.message || 'Что-то пошло не так!'
         );
-      })
-      .finally(() => {
         setTimeout(() => {
           setIsRequestingServer(false);
         }, 300);
       });
   };
 
-  const handleLogin = ({ email, password }) => {
+  const handleLogin = ({ email, password }, clearForm) => {
     setIsRequestingServer(true);
     MainApi.authorize(email, password)
       .then(res => {
@@ -161,6 +167,7 @@ const App = memo(() => {
         if (res.token) {
           localStorage.setItem('token', res.token);
           setLoggedIn(true);
+          clearForm();
           resetErrorMessage();
           history.push('/movies');
         }
@@ -168,16 +175,16 @@ const App = memo(() => {
       .catch(err => {
         setIsSuccess(false);
         handleLoginClick();
-        handleErrorMessageChange(
-          err.message || 'Что-то пошло не так!'
-        );
-      })
-      .finally(() => {
         setTimeout(() => {
           setIsRequestingServer(false);
         }, 300);
+        handleErrorMessageChange(
+          err.message || 'Что-то пошло не так!'
+        );
       });
   };
+
+  console.log(isRequestingServer);
 
   const handleProfileUpdate = ({ name, email, token }) => {
     setIsRequestingServer(true);
@@ -328,6 +335,9 @@ const App = memo(() => {
             handleInfoTooltip={handleInfoTooltip}
             handleErrorMessageChange={handleErrorMessageChange}
             isRequestingServer={isRequestingServer}
+            handleRequestingServerChange={
+              handleRequestingServerChange
+            }
           />
           <ProtectedRoute
             path="/saved-movies"

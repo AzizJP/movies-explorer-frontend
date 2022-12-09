@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useState, useEffect } from 'react';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 import SearchForm from '../Movies/SearchForm/SearchForm';
 import MoviesCardSavedList from './MoviesCardSavedList/MoviesCardSavedList';
@@ -17,35 +16,24 @@ const SavedMovies = memo(
   }) => {
     const [notFoundSavedMovies, setNotFoundSavedMovies] =
       useState(false);
-    const [savedMovies, setIsSavedMovies] = useState(
-      initialMoviesState
-    );
+    const [savedMovies, setIsSavedMovies] = useState([
+      ...initialMoviesState,
+    ]);
 
     useEffect(() => {
       setIsSavedMovies(initialMoviesState);
     }, [initialMoviesState]);
 
-    const searchOptions = JSON.parse(
-      localStorage.getItem('saved-movies-search-options')
-    );
-
-    const getInitialSearchText = useCallback(() => {
-      if (searchOptions) {
-        return searchOptions.text;
-      }
-      return '';
-    }, [searchOptions]);
-
     const { values, handleChange, errors, isValid } =
       useFormWithValidation(
         {
-          'saved-movies-search': getInitialSearchText(),
+          'saved-movies-search': '',
         },
         {
           'saved-movies-search': 'Нужно ввести ключевое слово',
         },
         {
-          'saved-movies-search': getInitialSearchText(),
+          'saved-movies-search': false,
         }
       );
 
@@ -70,8 +58,6 @@ const SavedMovies = memo(
           handleFoundMoviesChange={handleInitialMoviesChange}
           handleInfoTooltip={handleInfoTooltip}
           handleErrorMessageChange={handleErrorMessageChange}
-          searchOptions={searchOptions}
-          isRequestingServer={isRequestingServer}
           value={values['saved-movies-search']}
           isValid={isValid['saved-movies-search']}
           error={errors['saved-movies-search']}

@@ -41,11 +41,13 @@ const Login = memo(
 
     const handleSubmit = evt => {
       evt.preventDefault();
-      onLogin({
-        email: values['email'],
-        password: values['password'],
-      });
-      clearForm();
+      onLogin(
+        {
+          email: values['email'],
+          password: values['password'],
+        },
+        clearForm
+      );
     };
     return (
       <section className="login">

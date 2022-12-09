@@ -32,6 +32,7 @@ const Movies = memo(
     handleInfoTooltip,
     handleErrorMessageChange,
     isRequestingServer,
+    handleRequestingServerChange,
   }) => {
     const currentUser = useContext(CurrentUserContext);
     const [isLoading, setIsLoading] = useState(false);
@@ -71,6 +72,12 @@ const Movies = memo(
           'search': getInitialSearchText(),
         }
       );
+
+    useEffect(() => {
+      if (isRequestingServer) {
+        handleRequestingServerChange(false);
+      }
+    }, []);
 
     useEffect(() => {
       if (windowInnerWidth >= PHONE_BREAKPOINT) {
@@ -159,7 +166,6 @@ const Movies = memo(
           handleInfoTooltip={handleInfoTooltip}
           handleErrorMessageChange={handleErrorMessageChange}
           searchOptions={searchOptions}
-          isRequestingServer={isRequestingServer}
           isLoading={isLoading}
           value={values['search']}
           isValid={isValid['search']}

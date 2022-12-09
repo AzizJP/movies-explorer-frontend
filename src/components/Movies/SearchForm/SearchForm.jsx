@@ -79,8 +79,10 @@ const SearchForm = memo(
           handleDisplayedMoviesChange(newMovies);
           return handleNotFoundMoviesChange(true);
         }
+        if (path.pathname === '/movies') {
+          handleFoundMoviesChange(newMovies);
+        }
         handleNotFoundMoviesChange(false);
-        handleFoundMoviesChange(newMovies);
         handleDisplayedMoviesChange(newMovies);
       },
       [
@@ -88,6 +90,7 @@ const SearchForm = memo(
         handleFoundMoviesChange,
         handleNotFoundMoviesChange,
         isToggled,
+        path.pathname,
         value,
       ]
     );
@@ -151,7 +154,7 @@ const SearchForm = memo(
             });
         }
         if (path.pathname === '/saved-movies') {
-          filterMovies(foundMovies.reverse());
+          filterMovies(foundMovies);
         }
       },
       [

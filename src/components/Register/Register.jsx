@@ -49,12 +49,14 @@ const Register = memo(
 
     const handleSubmit = evt => {
       evt.preventDefault();
-      onRegister({
-        name: values['name'],
-        email: values['email'],
-        password: values['password'],
-      });
-      clearForm();
+      onRegister(
+        {
+          name: values['name'],
+          email: values['email'],
+          password: values['password'],
+        },
+        clearForm
+      );
     };
 
     return (
