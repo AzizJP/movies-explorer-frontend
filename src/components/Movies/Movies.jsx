@@ -152,6 +152,7 @@ const Movies = memo(
       <section className="movies">
         <SearchForm
           handleLoadingChange={handleLoadingChange}
+          notFoundMovies={notFoundMovies}
           handleNotFoundMoviesChange={handleNotFoundMoviesChange}
           foundMovies={foundMovies}
           displayedMovies={displayedMovies}

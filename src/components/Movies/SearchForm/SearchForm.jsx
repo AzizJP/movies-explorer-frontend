@@ -11,6 +11,7 @@ import './SearchForm.css';
 const SearchForm = memo(
   ({
     handleLoadingChange,
+    notFoundMovies,
     handleNotFoundMoviesChange,
     foundMovies,
     displayedMovies,
@@ -97,16 +98,19 @@ const SearchForm = memo(
 
     const handleToggleButtonClick = useCallback(() => {
       setIsToggled(!isToggled);
-      if (displayedMovies.length === 0) return;
+      if (notFoundMovies) return;
       if (!isToggled) return displayShortMovies(foundMovies);
       if (isToggled) return handleDisplayedMoviesChange(foundMovies);
     }, [
       displayShortMovies,
-      displayedMovies,
       foundMovies,
       handleDisplayedMoviesChange,
       isToggled,
+      notFoundMovies,
     ]);
+
+    console.log(foundMovies);
+    console.log(displayedMovies);
 
     useEffect(() => {
       if (path.pathname === '/movies') {
