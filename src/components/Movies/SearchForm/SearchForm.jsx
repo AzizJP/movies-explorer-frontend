@@ -109,9 +109,6 @@ const SearchForm = memo(
       notFoundMovies,
     ]);
 
-    console.log(foundMovies);
-    console.log(displayedMovies);
-
     useEffect(() => {
       if (path.pathname === '/movies') {
         localStorage.setItem(
