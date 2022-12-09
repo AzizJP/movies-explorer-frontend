@@ -130,19 +130,13 @@ const Movies = memo(
         const savedMovie = savedMoviesState.find(
           i => i.movieId === movie.id
         );
-        if (
-          !savedMovie ||
-          !!savedMoviesState.find(
-            i => i.movieId === movie.id && i.owner !== currentUser._id
-          )
-        ) {
+        const Liked = !!savedMoviesState.find(
+          i => i.movieId === movie.id && i.owner === currentUser._id
+        );
+        if (!savedMovie || !Liked) {
           return handleAddSavedMovie(movie);
         }
-        if (
-          !!savedMoviesState.find(
-            i => i.movieId === movie.id && i.owner === currentUser._id
-          )
-        ) {
+        if (Liked) {
           return handleDeleteMovie(savedMovie._id);
         }
       },
@@ -181,6 +175,7 @@ const Movies = memo(
           showMovies={showMovies}
           toggleMovieLike={toggleMovieLike}
           savedMoviesState={savedMoviesState}
+          isRequestingServer={isRequestingServer}
         />
         {displayedMovies.length === 0 ||
         maxAmount >= displayedMovies.length ? null : (

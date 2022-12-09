@@ -184,8 +184,6 @@ const App = memo(() => {
       });
   };
 
-  console.log(isRequestingServer);
-
   const handleProfileUpdate = ({ name, email, token }) => {
     setIsRequestingServer(true);
     MainApi.updateProfile(name, email, token)
@@ -274,6 +272,7 @@ const App = memo(() => {
   const handleAddSavedMovie = useCallback(
     movie => {
       setIsRequestingServer(true);
+      if (isRequestingServer) return;
       MainApi.addToFavorite(movie)
         .then(newMovie => {
           handleSavedMoviesChange([newMovie, ...savedMoviesState]);
@@ -282,13 +281,11 @@ const App = memo(() => {
           console.log(err);
         })
         .finally(() => {
-          setTimeout(() => {
-            setIsRequestingServer(false);
-          }, 300);
+          setIsRequestingServer(false);
         });
       return;
     },
-    [handleSavedMoviesChange, savedMoviesState]
+    [handleSavedMoviesChange, isRequestingServer, savedMoviesState]
   );
 
   const handleDeleteMovie = useCallback(
@@ -299,7 +296,7 @@ const App = memo(() => {
       );
       MainApi.deleteFromFavorite(id)
         .then(res => {
-          console.log(res);
+          console.log(res.message);
         })
         .catch(err => {
           console.log(err);

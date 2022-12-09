@@ -4,7 +4,12 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import './MoviesCardList.css';
 
 const MoviesCardList = memo(
-  ({ showMovies, toggleMovieLike, savedMoviesState }) => {
+  ({
+    showMovies,
+    toggleMovieLike,
+    savedMoviesState,
+    isRequestingServer,
+  }) => {
     return (
       <section className="movies-list">
         {showMovies.map(film => (
@@ -13,6 +18,7 @@ const MoviesCardList = memo(
             toggleMovieLike={toggleMovieLike}
             film={film}
             savedMoviesState={savedMoviesState}
+            isRequestingServer={isRequestingServer}
           />
         ))}
       </section>

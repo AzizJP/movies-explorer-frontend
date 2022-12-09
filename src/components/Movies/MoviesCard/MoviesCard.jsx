@@ -16,7 +16,12 @@ import './MoviesCard.css';
 const baseUrlForImage = 'https://api.nomoreparties.co';
 
 const MoviesCard = memo(
-  ({ toggleMovieLike, film, savedMoviesState }) => {
+  ({
+    toggleMovieLike,
+    film,
+    savedMoviesState,
+    isRequestingServer,
+  }) => {
     const [isSaved, setIsSaved] = useState(false);
     const { image, trailerLink, nameRU, duration, id } = film;
     const currentUser = useContext(CurrentUserContext);
@@ -61,6 +66,7 @@ const MoviesCard = memo(
               type="button"
               className="movies-card__icon"
               onClick={onCardLike}
+              disabled={isRequestingServer}
             >
               {isSaved ? <SavedIcon /> : <SaveIcon />}
             </button>
