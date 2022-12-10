@@ -1,0 +1,9 @@
+export const SHORT_FILM_DURATION = 40;
+export const PHONE_BREAKPOINT = 320;
+export const LAPTOP_BREAKPOINT = 634;
+export const DESKTOP_BREAKPOINT = 1137;
+export const VISIBLE_CARDS_AT_PHONE = 5;
+export const VISIBLE_CARDS_AT_LAPTOP = 8;
+export const VISIBLE_CARDS_AT_DESKTOP = 12;
+export const CARDS_INCREMENT_AT_PHONE = 2;
+export const CARDS_INCREMENT_AT_DESKTOP = 1;

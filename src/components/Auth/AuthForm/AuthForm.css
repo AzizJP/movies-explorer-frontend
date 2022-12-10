@@ -12,7 +12,11 @@
   justify-content: space-between;
   max-width: 24.75rem;
   width: 100%;
-  gap: 1.5rem;
+}
+
+.form__inputs {
+  display: flex;
+  flex-direction: column;
 }
 
 @media screen and (min-width: 768px) {

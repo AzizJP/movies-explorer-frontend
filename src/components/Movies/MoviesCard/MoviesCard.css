@@ -11,11 +11,14 @@
   overflow: hidden;
 }
 
-.movies-card__image {
+.movies-card__image-wrapper {
   flex-grow: 1;
+  overflow: hidden;
+}
+
+.movies-card__image {
   object-position: center;
   object-fit: cover;
-  overflow: hidden;
   width: 100%;
 }
 

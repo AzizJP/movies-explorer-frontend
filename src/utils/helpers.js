@@ -1,4 +1,10 @@
-const getYearsOld = () => {
+export const getTimeFromMinutes = initialMinutes => {
+  const hour = Math.trunc(initialMinutes / 60);
+  const minutes = initialMinutes % 60;
+  return `${hour}ч ${minutes}м`;
+};
+
+export const getYearsOld = () => {
   const now = new Date();
   const birthdayDate = new Date(1996, 11, 29);
   const birthdayDateNow = new Date(
@@ -13,7 +19,7 @@ const getYearsOld = () => {
   return age;
 };
 
-const getWordEnding = number => {
+export const getWordEnding = number => {
   if (
     number
       .toString()
@@ -28,5 +34,3 @@ const getWordEnding = number => {
   }
   return 'лет';
 };
-
-export { getYearsOld, getWordEnding };

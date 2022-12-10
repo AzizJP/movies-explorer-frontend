@@ -1,60 +1,78 @@
-import { memo, useCallback } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { memo } from 'react';
 
 import Input from './Input/Input';
 
 import './AuthForm.css';
 
-const AuthForm = memo(({ isLogin, children }) => {
-  const history = useHistory();
-  const path = useLocation();
-
-  const handleSubmit = useCallback(
-    evt => {
-      evt.preventDefault();
-      if (path.pathname === '/signup') {
-        return history.push('/signin');
-      }
-      return history.push('/movies');
-    },
-    [history, path]
-  );
-
-  return (
-    <div className="form__wrapper">
-      <form id="form" className="form" onSubmit={handleSubmit}>
-        <div className="form__inputs">
-          {!isLogin ? (
+const AuthForm = memo(
+  ({
+    onSubmit,
+    nameValue,
+    nameValidationErrorMessage,
+    isNameValid,
+    emailValue,
+    emailValidationErrorMessage,
+    isEmailValid,
+    passwordValue,
+    passwordValidationErrorMessage,
+    isPasswordValid,
+    handleChange,
+    isLogin,
+    children,
+  }) => {
+    return (
+      <div className="form__wrapper">
+        <form
+          id="form"
+          noValidate
+          className="form"
+          onSubmit={onSubmit}
+        >
+          <div className="form__inputs">
+            {!isLogin ? (
+              <Input
+                id="name"
+                minLength={2}
+                maxLength={30}
+                inputName="name"
+                title={'Имя'}
+                placeholder={'Введите имя'}
+                isValid={isNameValid}
+                errorText={nameValidationErrorMessage}
+                value={nameValue}
+                onChange={handleChange}
+                type="text"
+              />
+            ) : null}
             <Input
-              id="name"
+              id="email"
               minLength={2}
-              maxLength={30}
-              title={'Имя'}
-              placeholder={'Введите имя'}
-              isValid={true}
-              errorText={'Что-то пошло не так...'}
+              inputName="email"
+              title={'E-mail'}
+              placeholder={'Введите email'}
+              isValid={isEmailValid}
+              errorText={emailValidationErrorMessage}
+              value={emailValue}
+              onChange={handleChange}
+              type="email"
             />
-          ) : null}
-          <Input
-            id="email"
-            minLength={2}
-            title={'E-mail'}
-            placeholder={'Введите email'}
-            isValid={true}
-            errorText={'Что-то пошло не так...'}
-          />
-          <Input
-            id="password"
-            title={'Пароль'}
-            placeholder={'Введите пароль'}
-            isValid={false}
-            errorText={'Что-то пошло не так...'}
-          />
-        </div>
-        {children}
-      </form>
-    </div>
-  );
-});
+            <Input
+              id="password"
+              inputName="password"
+              title={'Пароль'}
+              placeholder={'Введите пароль'}
+              isValid={isPasswordValid}
+              errorText={passwordValidationErrorMessage}
+              value={passwordValue}
+              onChange={handleChange}
+              type="password"
+            />
+          </div>
+          {children}
+        </form>
+      </div>
+    );
+  }
+);
 
 export default AuthForm;
